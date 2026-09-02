@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cashiepa | Marketplace</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+:root{
+--primary:#38bdf8;
+--bg:#0f172a;
+--card:#1e293b;
+--border:#334155;
+--text:#f8fafc;
+--muted:#94a3b8;
+--red:#ef4444;
+--green:#22c55e;
+--blue:#3b82f6;
+}
+*{box-sizing:border-box;transition:.3s}
+body{
+font-family:'Inter',sans-serif;
+margin:0;
+background:var(--bg);
+color:var(--text);
+overflow-x:hidden;
+scroll-behavior: smooth;
+}
+/* loading */
+#loading-screen{
+position:fixed;
+top:0; left:0;
+width:100%; height:100vh;
+background:var(--bg);
+display:flex; flex-direction:column;
+justify-content:center; align-items:center;
+z-index:1000;
+}
+.loader-spinner{
+width:50px; height:50px;
+border:5px solid var(--border);
+border-top:5px solid var(--primary);
+border-radius:50%;
+animation:spin 1s linear infinite;
+}
+@keyframes spin{
+0%{transform:rotate(0)}
+100%{transform:rotate(360deg)}
+}
+/* landing */
+#landing-page{
+display:none;
+flex-direction:column;
+align-items:center;
+padding:20px;
+min-height:100vh;
+width:100%;
+}
+.hero-box{
+background:var(--card);
+border-radius:25px;
+padding:40px;
+max-width:450px;
+width:100%;
+text-align:center;
+border:1px solid var(--border);
+margin-top:40px;
+}
+/* landing links */
+.landing-links{
+margin-top:20px;
+display:flex;
+flex-direction:column;
+gap:10px;
+text-align:left;
+}
+.landing-links a{
+color:var(--primary);
+text-decoration:none;
+font-weight:600;
+display:block;
+cursor:pointer;
+}
+/* landing sections */
+.landing-section{
+margin-top:30px;
+background:var(--card);
+padding:20px;
+border-radius:15px;
+border:1px solid var(--border);
+width:100%;
+max-width:450px;
+}
+.landing-section h3{
+margin-top:0;
+color:var(--primary);
+}
+/* marketplace */
+#main-app{
+display:none;
+padding-top:80px;
+min-height:100vh;
+flex-direction:column;
+align-items:center;
+}
+.navbar{
+position:fixed;
+top:0; left:0;
+width:100%; height:70px;
+background:var(--card);
+border-bottom:1px solid var(--border);
+display:flex; align-items:center;
+padding:0 20px;
+z-index:100;
+}
+.search-container{
+flex:1;
+display:flex;
+align-items:center;
+background:var(--bg);
+border:1px solid var(--border);
+border-radius:10px;
+padding:8px 15px;
+margin:0 15px;
+}
+.search-container input{
+background:none;
+border:none;
+color:white;
+width:100%;
+outline:none;
+margin-left:10px;
+}
+.content-area{
+width:95%;
+max-width:700px;
+}
+/* welcome */
+.welcome-box{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:15px;
+padding:20px;
+margin-bottom:20px;
+text-align:center;
+}
+.action-buttons{
+display:flex;
+gap:15px;
+justify-content:center;
+flex-wrap:wrap;
+}
+.action-btn{
+padding:12px 25px;
+border-radius:10px;
+text-decoration:none;
+font-weight:600;
+display:inline-flex;
+align-items:center;
+gap:8px;
+}
+.buy-btn{
+background:var(--green);
+color:white;
+}
+.sell-btn{
+background:var(--blue);
+color:white;
+}
+/* featured slideshow */
+#featured-slideshow-container {
+width: 100%; height: 120px;
+overflow: hidden;
+border-radius: 15px;
+border: 1px solid var(--border);
+margin-bottom: 20px;
+position: relative;
+background: var(--card);
+}
+#featured-slideshow {
+display: flex;
+transition: transform 1s ease;
+height: 100%;
+}
+.slide {
+min-width: 100%;
+display: flex; justify-content: center; align-items: center;
+font-size: 24px;
+color: var(--text);
+}
+/* products */
+.product-item{
+background:var(--card);
+border:1px solid var(--border);
+border-radius:15px;
+padding:15px;
+margin-bottom:15px;
+display:flex;
+align-items:center;
+gap:15px;
+}
+.item-img{
+width:70px; height:70px;
+background:var(--border);
+border-radius:12px;
+display:flex; align-items:center; justify-content:center;
+font-size:28px;
+}
+.btn{
+background:var(--primary);
+color:#0f172a;
+border:none;
+padding:15px;
+border-radius:12px;
+font-weight:700;
+width:100%;
+cursor:pointer;
+}
+/* sell form */
+.sell-form{
+background:var(--card);
+padding:20px;
+border-radius:15px;
+border:1px solid var(--border);
+margin-top:20px;
+}
+.sell-form input{
+width:100%;
+padding:12px;
+margin-top:10px;
+border-radius:8px;
+border:1px solid var(--border);
+background:var(--bg);
+color:white;
+}
+/* social */
+.social-icons{
+display:flex;
+justify-content:center;
+gap:15px;
+margin-top:10px;
+}
+.social-icons a{
+color:var(--primary);
+font-size:20px;
+}
+/* footer */
+footer{
+margin-top:40px;
+padding:20px;
+text-align:center;
+border-top:1px solid var(--border);
+color:var(--muted);
+}
+</style>
+</head>
+
+<body>
+
+<div id="loading-screen">
+<h1 style="color:var(--primary)">Cashiepa</h1>
+<div class="loader-spinner"></div>
+</div>
+
+<div id="landing-page">
+
+<div class="hero-box">
+  <!-- Logo added here -->
+  <img src="cashiepa.png" alt="Cashiepa Logo" style="width:150px; display:block; margin:0 auto 20px;">
+  <h1 style="color:var(--primary)">Cashiepa</h1>
+  <p style="color:var(--muted)">The Ultimate Easy Trade</p>
+  <label style="display:flex;justify-content:center;gap:10px;margin:20px 0;cursor:pointer">
+    <input type="checkbox" id="terms"> I agree to terms
+  </label>
+  <button class="btn" onclick="enterApp()">Enter Marketplace</button>
+  <p id="msg"></p>
+
+  <!-- Landing page links -->
+  <div class="landing-links">
+    <a href="#about-us">About Us</a>
+    <a href="#terms-services">Terms & Services</a>
+    <a href="#contact-us">Contact Us</a>
+  </div>
+</div>
+
+<!-- Sections -->
+<div id="about-us" class="landing-section">
+<h3>About Us</h3>
+<p>
+Cashiepa is the ultimate online marketplace designed to make buying and selling fast, safe, and simple. Whether you're looking for the latest gadgets, stylish fashion, or unique second-hand items, Cashiepa connects you with a vibrant community of buyers and sellers. Our goal is to create a trustworthy environment where transactions are seamless and secure.
+</p>
+<p>
+We believe in transparency, ease of use, and customer satisfaction. From posting your first product to making your first purchase, Cashiepa provides all the tools you need to succeed in the world of online trading.
+</p>
+</div>
+
+<div id="terms-services" class="landing-section">
+<h3>Terms & Services</h3>
+<p>
+By using Cashiepa, you agree to follow our marketplace rules, respect other users, and abide by our policies. All sales are conducted between buyers and sellers, and we strive to maintain a secure and fair trading platform. For full details, please read our user agreement and privacy policy.
+</p>
+</div>
+
+<div id="contact-us" class="landing-section">
+<h3>Contact Us</h3>
+<p>
+Have questions or need support? Our team is here to help. Reach out to us through any of the following channels, and we'll respond as quickly as possible.
+</p>
+<div class="social-icons">
+<a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+<a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+<a href="#" title="X / Twitter"><i class="fab fa-x-twitter"></i></a>
+<a href="#" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+</div>
+<p style="margin-top:10px;color:var(--muted)">
+Or email us directly at <a href="mailto:support@cashiepa.com" style="color:var(--primary)">support@cashiepa.com</a>
+</p>
+</div>
+
+<footer>
+© 2026 Cashiepa. All Rights Reserved.
+</footer>
+
+</div>
+
+<!-- Main marketplace app -->
+<div id="main-app">
+<nav class="navbar">
+<span style="font-weight:700;color:var(--primary)">Cashiepa</span>
+<div class="hamburger-menu" style="margin-left:20px; position:relative;">
+<i class="fa fa-bars" id="hamburger-icon" style="cursor:pointer;font-size:20px;color:var(--text)"></i>
+<div id="hamburger-dropdown" style="display:none;position:absolute;top:30px;left:0;background:var(--card);border:1px solid var(--border);border-radius:8px;width:150px;flex-direction:column;overflow:hidden;z-index:200;">
+<a href="#buy" style="padding:10px 15px;color:var(--text);text-decoration:none;display:block;border-bottom:1px solid var(--border)">Buy</a>
+<a href="#sell" style="padding:10px 15px;color:var(--text);text-decoration:none;display:block;border-bottom:1px solid var(--border)">Sell</a>
+<a href="#products" style="padding:10px 15px;color:var(--text);text-decoration:none;display:block;border-bottom:1px solid var(--border)">Products</a>
+<a href="#signout" style="padding:10px 15px;color:var(--text);text-decoration:none;display:block">Sign Out</a>
+</div>
+</div>
+<div class="search-container">
+<i class="fa fa-search" style="color:var(--muted)"></i>
+<input id="productSearch" type="text" placeholder="Search products...">
+</div>
+</nav>
+
+<div class="content-area">
+
+<div class="welcome-box">
+<h2>Welcome to Cashiepa</h2>
+<p style="color:var(--muted)">Buy and sell products easily</p>
+<div class="action-buttons">
+<a href="#buyer" class="action-btn" style="background:var(--primary);color:white">Buyer</a>
+<a href="#seller" class="action-btn" style="background:var(--muted);color:white">Seller</a>
+<a href="#buy" class="action-btn buy-btn"><i class="fa-solid fa-cart-shopping"></i> Buy</a>
+<a href="#sell" class="action-btn sell-btn"><i class="fa-solid fa-tag"></i> Sell</a>
+</div>
+</div>
+
+<h3 style="border-left:4px solid var(--primary);padding-left:10px">Featured Items</h3>
+<div id="featured-slideshow-container">
+  <div id="featured-slideshow">
+    <div class="slide">🔥 iPhone 15 Pro</div>
+    <div class="slide">💻 MacBook Air</div>
+    <div class="slide">🎮 PlayStation 5</div>
+  </div>
+</div>
+
+<h3 id="buy" style="border-left:4px solid var(--primary);padding-left:10px">Products</h3>
+<div id="product-list">
+<div class="product-item">
+<div class="item-img">📱</div>
+<div><h4 class="item-title">iPhone 15 Pro</h4><p style="color:var(--primary)">$999</p></div>
+</div>
+<div class="product-item">
+<div class="item-img">💻</div>
+<div><h4 class="item-title">MacBook Air</h4><p style="color:var(--primary)">$999</p></div>
+</div>
+<div class="product-item">
+<div class="item-img">🎮</div>
+<div><h4 class="item-title">PlayStation 5</h4><p style="color:var(--primary)">$499</p></div>
+</div>
+<div class="product-item">
+<div class="item-img">🚲</div>
+<div><h4 class="item-title">Mountain Bike</h4><p style="color:var(--primary)">$250</p></div>
+</div>
+</div>
+
+<h3 id="sell" style="border-left:4px solid var(--primary);padding-left:10px">Sell Item</h3>
+<div class="sell-form">
+<input id="itemName" placeholder="Product name">
+<input id="itemPrice" placeholder="Price">
+<button class="btn" onclick="addProduct()">Add Listing</button>
+</div>
+
+</div>
+<footer>© 2026 Cashiepa. All Rights Reserved.</footer>
+</div>
+
+<script>
+window.addEventListener('load',()=>{
+setTimeout(()=>{
+document.getElementById("loading-screen").style.display="none";
+document.getElementById("landing-page").style.display="flex";
+},2000)
+document.getElementById("productSearch").addEventListener("keyup",searchProducts)
+})
+function enterApp(){
+if(!document.getElementById("terms").checked){
+document.getElementById("msg").innerText="Please agree to terms"
+document.getElementById("msg").style.color="red"
+return
+}
+document.getElementById("landing-page").style.display="none"
+document.getElementById("main-app").style.display="flex"
+}
+function searchProducts(){
+let input=document.getElementById("productSearch").value.toLowerCase()
+let items=document.querySelectorAll(".product-item")
+items.forEach(item=>{
+let title=item.querySelector(".item-title").innerText.toLowerCase()
+item.style.display=title.includes(input)?"flex":"none"
+})
+}
+function addProduct(){
+let name=document.getElementById("itemName").value
+let price=document.getElementById("itemPrice").value
+if(name==""||price=="")return
+let list=document.getElementById("product-list")
+let item=document.createElement("div")
+item.className="product-item"
+item.innerHTML=`
+<div class="item-img">📦</div>
+<div>
+<h4 class="item-title">${name}</h4>
+<p style="color:var(--primary)">$${price}</p>
+</div>
+`
+list.prepend(item)
+document.getElementById("itemName").value=""
+document.getElementById("itemPrice").value=""
+}
+// Hamburger toggle
+document.getElementById("hamburger-icon").addEventListener("click", () => {
+const dropdown = document.getElementById("hamburger-dropdown");
+dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+dropdown.style.flexDirection = "column";
+});
+// Featured slideshow
+let slideshow = document.getElementById("featured-slideshow");
+let slides = document.querySelectorAll("#featured-slideshow .slide");
+let currentIndex = 0;
+setInterval(() => {
+currentIndex = (currentIndex + 1) % slides.length;
+slideshow.style.transform = `translateX(-${currentIndex * 100}%)`;
+}, 5000);
+</script>
+
+</body>
+</html>
