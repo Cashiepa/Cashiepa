@@ -1,0 +1,20 @@
+[
+  {
+    "title": "iPhone 15 Pro",
+    "price": 999,
+    "location": "Kampala",
+    "image": "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=300"
+  },
+  {
+    "title": "MacBook Air",
+    "price": 999,
+    "location": "Entebbe",
+    "image": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300"
+  },
+  {
+    "title": "PlayStation 5",
+    "price": 499,
+    "location": "Jinja",
+    "image": "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=300"
+  }
+]
