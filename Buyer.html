@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashiepa | Marketplace</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #38bdf8;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --border: #334155;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --red: #ef4444;
+            --orange: #f59e0b;
+            --green: #22c55e;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* --- AUTH SECTION --- */
+        #auth-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: var(--card);
+            padding: 35px;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .name-row { display: flex; gap: 10px; }
+        
+        @media (max-width: 400px) {
+            .name-row { flex-direction: column; gap: 0; }
+        }
+
+        label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; margin-left: 5px; }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: white;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus { border-color: var(--primary); }
+
+        /* --- STRENGTH METER --- */
+        .strength-meter {
+            height: 4px;
+            width: 100%;
+            background: var(--border);
+            margin-top: 8px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease, background 0.3s ease;
+        }
+        .strength-text {
+            font-size: 10px;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .btn {
+            background: var(--primary); color: #0f172a; border: none;
+            padding: 15px; border-radius: 12px; font-weight: 700;
+            width: 100%; cursor: pointer; margin-top: 10px;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .btn:hover { background: #7dd3fc; transform: translateY(-2px); }
+
+        .error-msg { 
+            color: var(--red); 
+            font-size: 13px; 
+            margin-top: 15px; 
+            display: none; 
+            background: rgba(239, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .toggle-link { margin-top: 20px; font-size: 13px; color: var(--muted); cursor: pointer; }
+        .toggle-link span { color: var(--primary); font-weight: 600; }
+
+        /* --- MARKETPLACE APP --- */
+        #main-app { display: none; padding-top: 90px; flex-direction: column; align-items: center; }
+        
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%; height: 70px;
+            background: var(--card); border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 5%; z-index: 100;
+        }
+
+        .search-container {
+            flex: 1; display: flex; align-items: center;
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 10px; padding: 8px 15px; margin: 0 25px;
+        }
+        .search-container input { border: none; background: none; margin-left: 10px; width: 100%; color: white; outline: none;}
+
+        .content-area { width: 90%; max-width: 1000px; margin-bottom: 50px; }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .product-item {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 15px; padding: 20px; display: flex; align-items: center; gap: 15px;
+            transition: transform 0.2s;
+        }
+        .product-item:hover { transform: scale(1.02); }
+
+        .item-img { width: 60px; height: 60px; background: var(--bg); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="auth-page">
+        <div class="auth-container">
+            
+            <div id="view-welcome">
+                <i class="fa-solid fa-crown" style="font-size: 50px; color: var(--primary); margin-bottom: 15px;"></i>
+                <h1 style="margin:0; color: var(--primary)">Welcome Boss</h1>
+                <p>Register to continue to Cashiepa</p>
+                <button class="btn" onclick="showView('register')">Register Now</button>
+                <div class="toggle-link" onclick="showView('login')">Already a member? <span>Login</span></div>
+            </div>
+
+            <div id="view-register" class="hidden">
+                <h2 style="margin-top:0">Register Account</h2>
+                <form id="regForm">
+                    <div class="input-group">
+                        <label for="reg-user">Username (4+ characters)</label>
+                        <input type="text" id="reg-user" autocomplete="username" placeholder="Choose username" required>
+                    </div>
+                    <div class="name-row">
+                        <div class="input-group" style="flex: 1;">
+                            <label for="reg-surname">Surname</label>
+                            <input type="text" id="reg-surname" autocomplete="family-name" placeholder="Surname" required>
+                        </div>
+                        <div class="input-group" style="flex: 1;">
+                            <label for="reg-given">Given Name</label>
+                            <input type="text" id="reg-given" autocomplete="given-name" placeholder="First Name" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-phone">Phone Number (+Country Code)</label>
+                        <input type="tel" id="reg-phone" autocomplete="tel" placeholder="+1234567890" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-email">Email Address</label>
+                        <input type="email" id="reg-email" autocomplete="email" placeholder="boss@cashiepa.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="reg-pass">Strong Password</label>
+                        <input type="password" id="reg-pass" autocomplete="new-password" placeholder="••••••••" required oninput="checkStrength(this.value)">
+                        <div class="strength-meter">
+                            <div id="strength-bar" class="strength-bar"></div>
+                        </div>
+                        <div id="strength-text" class="strength-text"></div>
+                    </div>
+                    <button type="submit" class="btn">Create Account</button>
+                    <p id="reg-error" class="error-msg"></p>
+                </form>
+                <div class="toggle-link" onclick="showView('login')">Back to <span>Login</span></div>
+            </div>
+
+            <div id="view-login" class="hidden">
+                <h2 style="margin-top:0">Login Boss</h2>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="login-user">Username</label>
+                        <input type="text" id="login-user" autocomplete="username" placeholder="Username" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="login-pass">Password</label>
+                        <input type="password" id="login-pass" autocomplete="current-password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn">Sign In</button>
+                    <p id="login-error" class="error-msg"></p>
+                </form>
+                <div class="toggle-link" onclick="showView('register')">Need an account? <span>Register</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-app">
+        <nav class="navbar">
+            <span style="font-weight:700; color:var(--primary); font-size: 22px; letter-spacing: -1px;">Cashiepa</span>
+            <div class="search-container">
+                <i class="fa fa-search" style="color:var(--muted)"></i>
+                <input type="text" placeholder="Search marketplace..." onkeyup="searchItems(this.value)">
+            </div>
+            <button onclick="handleLogout()" style="background:none; border:none; color:var(--red); font-weight:bold; cursor:pointer; font-size: 14px;">Sign Out</button>
+        </nav>
+
+        <div class="content-area">
+            <h2 id="user-greeting">Welcome!</h2>
+            <div class="product-grid">
+                <div class="product-item">
+                    <div class="item-img">📱</div>
+                    <div><h4 style="margin:0">iPhone 15 Pro</h4><p style="color:var(--primary); margin:5px 0">$999</p></div>
+                </div>
+                <div class="product-item">
+                    <div class="item-img">💻</div>
+                    <div><h4 style="margin:0">MacBook Pro M3</h4><p style="color:var(--primary); margin:5px 0">$1,299</p></div>
+                </div>
+                <div class="product-item">
+                    <div class="item-img">🎧</div>
+                    <div><h4 style="margin:0">AirPods Max</h4><p style="color:var(--primary); margin:5px 0">$549</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check Session on Start
+        window.onload = function() {
+            const session = localStorage.getItem('cashiepa_session');
+            if(session) {
+                renderApp(JSON.parse(session).givenName);
+            }
+        };
+
+        function showView(viewId) {
+            const views = ['view-welcome', 'view-register', 'view-login'];
+            views.forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById('view-' + viewId).classList.remove('hidden');
+        }
+
+        // --- STRICT VALIDATION ---
+
+        function checkStrength(pass) {
+            const bar = document.getElementById('strength-bar');
+            const text = document.getElementById('strength-text');
+            let score = 0;
+
+            if (pass.length > 7) score++;
+            if (/[A-Z]/.test(pass)) score++;
+            if (/[0-9]/.test(pass)) score++;
+            if (/[^A-Za-z0-9]/.test(pass)) score++;
+
+            const colors = [null, '#ef4444', '#f59e0b', '#38bdf8', '#22c55e'];
+            const labels = ['', 'Too Weak', 'Weak', 'Good', 'Strong'];
+
+            bar.style.width = (score * 25) + '%';
+            bar.style.backgroundColor = colors[score];
+            text.innerText = labels[score];
+            text.style.color = colors[score];
+            
+            return score;
+        }
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function validatePhone(phone) {
+            return /^\+[0-9]{7,15}$/.test(phone);
+        }
+
+        // --- REGISTRATION ---
+        document.getElementById('regForm').onsubmit = function(e) {
+            e.preventDefault();
+            const errorElement = document.getElementById('reg-error');
+            errorElement.style.display = 'none';
+
+            const user = document.getElementById('reg-user').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const pass = document.getElementById('reg-pass').value;
+            const surname = document.getElementById('reg-surname').value.trim();
+            const given = document.getElementById('reg-given').value.trim();
+
+            // Strict Rules
+            if (user.length < 4) return showError(errorElement, "Username must be 4+ characters.");
+            if (surname.length < 2 || given.length < 2) return showError(errorElement, "Please enter your full names.");
+            if (!validateEmail(email)) return showError(errorElement, "Invalid email format.");
+            if (!validatePhone(phone)) return showError(errorElement, "Invalid phone. Use format: +123456789");
+            if (checkStrength(pass) < 3) return showError(errorElement, "Password must be 'Good' or 'Strong'.");
+
+            // Save to Local Storage
+            let users = JSON.parse(localStorage.getItem('cashiepa_users') || '[]');
+            if (users.some(u => u.username === user || u.email === email)) {
+                return showError(errorElement, "Username or Email already exists.");
+            }
+
+            const newUser = { username: user, surname, givenName: given, phone, email, password: pass };
+            users.push(newUser);
+            localStorage.setItem('cashiepa_users', JSON.stringify(users));
+            loginUser(newUser);
+        };
+
+        // --- LOGIN ---
+        document.getElementById('loginForm').onsubmit = function(e) {
+            e.preventDefault();
+            const errorElement = document.getElementById('login-error');
+            errorElement.style.display = 'none';
+
+            const userIn = document.getElementById('login-user').value.trim();
+            const passIn = document.getElementById('login-pass').value;
+
+            let users = JSON.parse(localStorage.getItem('cashiepa_users') || '[]');
+            const found = users.find(u => u.username === userIn && u.password === passIn);
+
+            if(found) {
+                loginUser(found);
+            } else {
+                showError(errorElement, "Denied: Invalid username or password.");
+            }
+        };
+
+        function showError(element, msg) {
+            element.innerText = "❌ " + msg;
+            element.style.display = 'block';
+            return false;
+        }
+
+        function loginUser(user) {
+            localStorage.setItem('cashiepa_session', JSON.stringify(user));
+            renderApp(user.givenName);
+        }
+
+        function renderApp(name) {
+            document.getElementById('auth-page').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
+            document.getElementById('user-greeting').innerText = "Welcome Boss, " + name + "!";
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('cashiepa_session');
+            location.reload();
+        }
+
+        function searchItems(query) {
+            const filter = query.toLowerCase();
+            const items = document.querySelectorAll('.product-item');
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                item.classList.toggle('hidden', !text.includes(filter));
+            });
+        }
+    </script>
+</body>
+</html>
