@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Cashiepa | Marketplace</title>
 
-<!-- Security Headers -->
 <meta http-equiv="X-Frame-Options" content="DENY">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 
@@ -394,13 +393,11 @@ footer {
 
 <body>
 
-<!-- Loading Screen -->
 <div id="loading-screen">
   <h1 style="color:var(--primary)">Cashiepa</h1>
   <div class="loader-spinner"></div>
 </div>
 
-<!-- Landing Page -->
 <div id="landing-page">
   <div class="hero-box">
     <img src="cashiepa.png" alt="Cashiepa Logo" class="hero-logo">
@@ -450,7 +447,6 @@ footer {
   </footer>
 </div>
 
-<!-- Main App -->
 <div id="main-app">
   <nav class="navbar">
     <span style="font-weight:700; color:var(--primary); font-size: 1.1rem;">Cashiepa</span>
@@ -494,34 +490,31 @@ footer {
 
     <h3 id="buy" style="border-left:4px solid var(--primary); padding-left:10px; margin-top: 20px; margin-bottom: 10px;">Products</h3>
     
-    <!-- Filter Bar -->
     <div class="filter-bar">
       <input id="maxPriceInput" type="number" placeholder="Max Price ($)" onkeyup="filterProducts()">
       <input id="locationInput" type="text" placeholder="Filter Location" onkeyup="filterProducts()">
     </div>
 
-    <!-- Product list dynamically filled by products.json -->
     <div id="product-list"></div>
-<h3 id="sell" style="border-left:4px solid var(--primary); padding-left:10px; margin-top: 30px;">Sell Item</h3>
 
-<form id="sellItemForm" class="sell-form" onsubmit="sendListingToWhatsApp(event)">
-  <input type="text" id="itemName" placeholder="Product name" required>
-  <input type="number" id="itemPrice" placeholder="Price ($)" required>
-  <input type="text" id="itemLocation" placeholder="Location (e.g. Kampala)" required>
-  <input type="text" id="itemImage" placeholder="Image URL (e.g. https://... or photo link)" required>
-  <input type="tel" id="sellerPhone" placeholder="+256754958464" required>
+    <h3 id="sell" style="border-left:4px solid var(--primary); padding-left:10px; margin-top: 30px;">Sell Item</h3>
 
-  <button type="submit" class="btn" id="submitBtn">Submit </button>
-  
-  <p id="submissionMsg" style="display:none; margin-top:15px; color:var(--primary); font-weight:600; text-align:center; line-height:1.4;"></p>
-</form>
-    
+    <form id="sellItemForm" class="sell-form" onsubmit="sendListingToWhatsApp(event)">
+      <input type="text" id="itemName" placeholder="Product name" required>
+      <input type="number" id="itemPrice" placeholder="Price ($)" required>
+      <input type="text" id="itemLocation" placeholder="Location (e.g. Kampala)" required>
+      <input type="text" id="itemImage" placeholder="Image URL (e.g. https://... or photo link)" required>
+      <input type="tel" id="sellerPhone" placeholder="Your Phone/WhatsApp (+256...)" required>
+
+      <button type="submit" class="btn" id="submitBtn">Submit for Review</button>
+      
+      <p id="submissionMsg" style="display:none; margin-top:15px; color:var(--primary); font-weight:600; text-align:center; line-height:1.4;"></p>
+    </form>
 
     <footer>© 2026 Cashiepa. All Rights Reserved.</footer>
   </div>
 </div>
 
-<!-- Purchase Action Modal -->
 <div class="modal" id="buyModal">
   <div class="modal-content">
     <h3 style="color:var(--primary); margin-bottom: 8px;" id="modalItemTitle">Product Details</h3>
@@ -627,11 +620,12 @@ function filterProducts() {
     }
   });
 }
+
 function sendListingToWhatsApp(event) {
   event.preventDefault(); // Stop default form submit action
 
-  // 1. My WhatsApp number 
-  const myWhatsAppNumber = "+256754958464"; 
+  // 1. My WhatsApp number (MUST be digits only, no '+' sign)
+  const myWhatsAppNumber = "256754958464"; 
 
   // 2. Get inputs from form
   const name = document.getElementById("itemName").value.trim();
@@ -642,7 +636,7 @@ function sendListingToWhatsApp(event) {
 
   if (!name || !price) return;
 
-  // 3. Format the message for my approval
+  // 3. Format the message for approval
   const messageText = 
 `📌 *NEW PRODUCT SUBMISSION FOR CASHIEPA*
 
@@ -667,8 +661,44 @@ Please confirm and approve this listing to add it to Cashiepa.`;
   // 6. Reset form fields
   document.getElementById("sellItemForm").reset();
 
-  // 7. Open seller's WhatsApp directly to my chat
+  // 7. Open seller's WhatsApp directly to your chat
   setTimeout(() => {
     window.open(whatsappUrl, "_blank");
   }, 1000);
 }
+
+function openBuyModal(title, price, location) {
+  document.getElementById('modalItemTitle').innerText = title;
+  document.getElementById('modalItemPrice').innerText = price;
+  document.getElementById('modalItemLoc').innerText = 'Location: ' + location;
+  
+  let msg = encodeURIComponent(`Hello, I want to purchase "${title}" listed for ${price} on Cashiepa.`);
+  document.getElementById('whatsappBtn').href = `https://wa.me/?text=${msg}`;
+
+  document.getElementById('buyModal').style.display = 'flex';
+}
+
+function closeBuyModal() {
+  document.getElementById('buyModal').style.display = 'none';
+}
+
+// Hamburger dropdown toggle
+document.getElementById("hamburger-icon").addEventListener("click", () => {
+  const dropdown = document.getElementById("hamburger-dropdown");
+  dropdown.style.display = dropdown.style.display === "flex" ? "none" : "flex";
+});
+
+// Featured slideshow transition
+let slideshow = document.getElementById("featured-slideshow");
+let slides = document.querySelectorAll("#featured-slideshow .slide");
+let currentIndex = 0;
+setInterval(() => {
+  if (slides.length > 0) {
+    currentIndex = (currentIndex + 1) % slides.length;
+    slideshow.style.transform = `translateX(-${currentIndex * 100}%)`;
+  }
+}, 4000);
+</script>
+
+</body>
+</html>
