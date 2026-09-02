@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cashiepa | Seller Portal</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #38bdf8;
+            --bg: #0f172a;
+            --card: #1e293b;
+            --border: #334155;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --red: #ef4444;
+            --orange: #f59e0b;
+            --green: #22c55e;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        #auth-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: var(--card);
+            padding: 35px;
+            border-radius: 25px;
+            border: 1px solid var(--border);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .name-row { display: flex; gap: 10px; }
+        
+        @media (max-width: 400px) {
+            .name-row { flex-direction: column; gap: 0; }
+        }
+
+        label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 5px; margin-left: 5px; }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 15px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: white;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        input:focus, textarea:focus, select:focus { border-color: var(--primary); }
+
+        .strength-meter {
+            height: 4px;
+            width: 100%;
+            background: var(--border);
+            margin-top: 8px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease, background 0.3s ease;
+        }
+        .strength-text {
+            font-size: 10px;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .btn {
+            background: var(--primary); color: #0f172a; border: none;
+            padding: 15px; border-radius: 12px; font-weight: 700;
+            width: 100%; cursor: pointer; margin-top: 10px;
+            transition: transform 0.2s, background 0.2s;
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
+        }
+        .btn:hover { background: #7dd3fc; transform: translateY(-2px); }
+        .btn-whatsapp { background: var(--green); color: white; }
+        .btn-whatsapp:hover { background: #16a34a; }
+
+        .error-msg { 
+            color: var(--red); 
+            font-size: 13px; 
+            margin-top: 15px; 
+            display: none; 
+            background: rgba(239, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .payment-box {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .toggle-link { margin-top: 20px; font-size: 13px; color: var(--muted); cursor: pointer; }
+        .toggle-link span { color: var(--primary); font-weight: 600; }
+
+        #main-app { display: none; padding-top: 90px; flex-direction: column; align-items: center; }
+        
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%; height: 70px;
+            background: var(--card); border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 5%; z-index: 100;
+        }
+
+        .search-container {
+            flex: 1; display: flex; align-items: center;
+            background: var(--bg); border: 1px solid var(--border);
+            border-radius: 10px; padding: 8px 15px; margin: 0 25px;
+        }
+        .search-container input { border: none; background: none; margin-left: 10px; width: 100%; color: white; outline: none;}
+
+        .content-area { width: 90%; max-width: 1000px; margin-bottom: 50px; }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .product-item {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 15px; padding: 20px; display: flex; align-items: center; gap: 15px;
+            transition: transform 0.2s;
+        }
+        .product-item:hover { transform: scale(1.02); }
+
+        .item-img { width: 60px; height: 60px; background: var(--bg); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+
+        /* MODAL STYLES */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); display: flex; justify-content: center;
+            align-items: center; z-index: 200; padding: 20px;
+        }
+
+        .modal-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 20px; padding: 30px; width: 100%; max-width: 450px;
+            position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .close-btn {
+            position: absolute; top: 15px; right: 20px; font-size: 20px;
+            color: var(--muted); cursor: pointer;
+        }
+        .close-btn:hover { color: white; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div id="auth-page">
+        <div class="auth-container">
+            
+            <!-- SELLER WELCOME -->
+            <div id="view-welcome">
+                <i class="fa-solid fa-store" style="font-size: 50px; color: var(--primary); margin-bottom: 15px;"></i>
+                <h1 style="margin:0; color: var(--primary)">Cashiepa Sellers</h1>
+                <p>Register your store to sell products</p>
+
+                <button class="btn" onclick="showView('register')" style="background: var(--green); color: white;">
+                    <i class="fa-solid fa-user-plus"></i> Become a Seller
+                </button>
+
+                <div class="toggle-link" onclick="showView('login')">
+                    Already registered? <span>Seller Login</span>
+                </div>
+            </div>
+
+            <!-- REGISTER SELLER FORM -->
+            <div id="view-register" class="hidden">
+                <h2 style="margin-top:0">Register Seller Account</h2>
+                <form id="regForm">
+                    <div class="input-group">
+                        <label for="reg-user">Username (4+ characters)</label>
+                        <input type="text" id="reg-user" autocomplete="username" placeholder="Choose username" required>
+                    </div>
+                    
+                    <div class="name-row">
+                        <div class="input-group" style="flex: 1;">
+                            <label for="reg-surname">Surname</label>
+                            <input type="text" id="reg-surname" autocomplete="family-name" placeholder="Surname" required>
+                        </div>
+                        <div class="input-group" style="flex: 1;">
+                            <label for="reg-given">Given Name</label>
+                            <input type="text" id="reg-given" autocomplete="given-name" placeholder="First Name" required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="reg-phone">Phone Number (+256...)</label>
+                        <input type="tel" id="reg-phone" autocomplete="tel" placeholder="+256..." required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="reg-email">Email Address</label>
+                        <input type="email" id="reg-email" autocomplete="email" placeholder="seller@cashiepa.com" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="reg-pass">Strong Password</label>
+                        <input type="password" id="reg-pass" autocomplete="new-password" placeholder="••••••••" required oninput="checkStrength(this.value)">
+                        <div class="strength-meter">
+                            <div id="strength-bar" class="strength-bar"></div>
+                        </div>
+                        <div id="strength-text" class="strength-text"></div>
+                    </div>
+
+                    <button type="submit" class="btn">Proceed to Payment</button>
+                    <p id="reg-error" class="error-msg"></p>
+                </form>
+                <div class="toggle-link" onclick="showView('login')">Back to <span>Login</span></div>
+            </div>
+
+            <!-- SELLER PAYMENT VIEW -->
+            <div id="view-seller-pay" class="hidden">
+                <i class="fa-solid fa-credit-card" style="font-size: 40px; color: var(--primary); margin-bottom: 10px;"></i>
+                <h2 style="margin:0">Seller Activation</h2>
+                <p style="font-size:13px; color:var(--muted)">Pay fee to activate seller posting rights.</p>
+
+                <div class="payment-box">
+                    <p style="margin: 0 0 5px 0;"><strong>Admin Number:</strong> +<span id="display-admin-phone">256754958464</span></p>
+                    <p style="margin: 0 0 5px 0;"><strong>Account Name:</strong> Cashiepa Admin</p>
+                    <p style="margin: 0;"><strong>Instructions:</strong> Send payment using your registered phone number, then tap below to submit proof via WhatsApp.</p>
+                </div>
+
+                <a id="whatsapp-btn" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+                    <i class="fa-brands fa-whatsapp"></i> Send Payment Proof
+                </a>
+
+                <div class="toggle-link" onclick="showView('login')">Already Activated? <span>Login Here</span></div>
+            </div>
+
+            <!-- LOGIN VIEW -->
+            <div id="view-login" class="hidden">
+                <h2 style="margin-top:0">Seller Login</h2>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label for="login-user">Username</label>
+                        <input type="text" id="login-user" autocomplete="username" placeholder="Username" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="login-pass">Password</label>
+                        <input type="password" id="login-pass" autocomplete="current-password" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn">Sign In to Dashboard</button>
+                    <p id="login-error" class="error-msg"></p>
+                </form>
+                <div class="toggle-link" onclick="showView('register')">Need a Seller Account? <span>Register</span></div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SELLER DASHBOARD VIEW -->
+    <div id="main-app">
+        <nav class="navbar">
+            <span style="font-weight:700; color:var(--primary); font-size: 22px; letter-spacing: -1px;">Cashiepa Seller Dashboard</span>
+            <div class="search-container">
+                <i class="fa fa-search" style="color:var(--muted)"></i>
+                <input type="text" placeholder="Search my items..." onkeyup="searchItems(this.value)">
+            </div>
+            <button onclick="handleLogout()" style="background:none; border:none; color:var(--red); font-weight:bold; cursor:pointer; font-size: 14px;">Sign Out</button>
+        </nav>
+
+        <div class="content-area">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2 id="user-greeting">Welcome Seller!</h2>
+                <button class="btn" style="width:auto; padding: 10px 20px; font-size:12px; background: var(--green); color: white;" onclick="toggleProductModal(true)">+ Post New Product</button>
+            </div>
+
+            <p style="color: var(--muted); font-size:14px;">Your Active Inventory:</p>
+
+            <div class="product-grid">
+                <div class="product-item">
+                    <div class="item-img">📱</div>
+                    <div><h4 style="margin:0">iPhone 15 Pro</h4><p style="color:var(--primary); margin:5px 0">$999</p></div>
+                </div>
+                <div class="product-item">
+                    <div class="item-img">💻</div>
+                    <div><h4 style="margin:0">MacBook Pro M3</h4><p style="color:var(--primary); margin:5px 0">$1,299</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- POST PRODUCT MODAL -->
+    <div id="product-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <span class="close-btn" onclick="toggleProductModal(false)">&times;</span>
+            <h2 style="margin-top:0; color: var(--primary);">Post Product for Review</h2>
+            <p style="font-size: 12px; color: var(--muted);">Fill out product details. Once submitted, these details will be sent directly to Admin on WhatsApp for live posting.</p>
+            
+            <form id="postProductForm">
+                <div class="input-group">
+                    <label for="prod-title">Product Name</label>
+                    <input type="text" id="prod-title" placeholder="e.g. Nike Air Max" required>
+                </div>
+
+                <div class="name-row">
+                    <div class="input-group" style="flex: 1;">
+                        <label for="prod-price">Price (UGX / USD)</label>
+                        <input type="text" id="prod-price" placeholder="e.g. 150,000 UGX" required>
+                    </div>
+                    <div class="input-group" style="flex: 1;">
+                        <label for="prod-category">Category</label>
+                        <select id="prod-category" required>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Vehicles">Vehicles</option>
+                            <option value="Real Estate">Real Estate</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="prod-desc">Product Description & Condition</label>
+                    <textarea id="prod-desc" rows="3" placeholder="Describe your product (Brand new, slightly used, specs, location...)" required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-whatsapp">
+                    <i class="fa-brands fa-whatsapp"></i> Post via WhatsApp Admin
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- GLOBAL CONFIGURATION ---
+        const CONFIG = {
+            ADMIN_PHONE: "256754958464",
+            ADMIN_NAME: "Cashiepa Admin"
+        };
+
+        const STORAGE_KEYS = {
+            SELLERS: 'cashiepa_sellers',
+            SESSION: 'cashiepa_seller_session'
+        };
+
+        window.onload = function() {
+            document.getElementById('display-admin-phone').innerText = CONFIG.ADMIN_PHONE;
+            
+            const session = localStorage.getItem(STORAGE_KEYS.SESSION);
+            if(session) {
+                renderApp(JSON.parse(session));
+            }
+        };
+
+        function showView(viewId) {
+            const views = ['view-welcome', 'view-register', 'view-seller-pay', 'view-login'];
+            views.forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById('view-' + viewId).classList.remove('hidden');
+        }
+
+        function toggleProductModal(show) {
+            const modal = document.getElementById('product-modal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        function checkStrength(pass) {
+            const bar = document.getElementById('strength-bar');
+            const text = document.getElementById('strength-text');
+            let score = 0;
+
+            if (pass.length > 7) score++;
+            if (/[A-Z]/.test(pass)) score++;
+            if (/[0-9]/.test(pass)) score++;
+            if (/[^A-Za-z0-9]/.test(pass)) score++;
+
+            const colors = [null, '#ef4444', '#f59e0b', '#38bdf8', '#22c55e'];
+            const labels = ['', 'Too Weak', 'Weak', 'Good', 'Strong'];
+
+            bar.style.width = (score * 25) + '%';
+            bar.style.backgroundColor = colors[score];
+            text.innerText = labels[score];
+            text.style.color = colors[score];
+            
+            return score;
+        }
+
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function validatePhone(phone) {
+            return /^\+[0-9]{7,15}$/.test(phone);
+        }
+
+        // --- REGISTRATION ---
+        document.getElementById('regForm').onsubmit = function(e) {
+            e.preventDefault();
+            const errorElement = document.getElementById('reg-error');
+            errorElement.style.display = 'none';
+
+            const user = document.getElementById('reg-user').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const pass = document.getElementById('reg-pass').value;
+            const surname = document.getElementById('reg-surname').value.trim();
+            const given = document.getElementById('reg-given').value.trim();
+
+            if (user.length < 4) return showError(errorElement, "Username must be 4+ characters.");
+            if (surname.length < 2 || given.length < 2) return showError(errorElement, "Please enter your full names.");
+            if (!validateEmail(email)) return showError(errorElement, "Invalid email format.");
+            if (!validatePhone(phone)) return showError(errorElement, "Invalid phone. Format: +256700000000");
+            if (checkStrength(pass) < 3) return showError(errorElement, "Password must be 'Good' or 'Strong'.");
+
+            let sellers = JSON.parse(localStorage.getItem(STORAGE_KEYS.SELLERS) || '[]');
+            if (sellers.some(s => s.username === user || s.email === email)) {
+                return showError(errorElement, "Username or Email already registered.");
+            }
+
+            const newSeller = { 
+                username: user, 
+                surname, 
+                givenName: given, 
+                phone: phone, 
+                email, 
+                password: pass,
+                role: 'seller'
+            };
+
+            sellers.push(newSeller);
+            localStorage.setItem(STORAGE_KEYS.SELLERS, JSON.stringify(sellers));
+
+            setupWhatsAppLink(user, phone);
+            showView('seller-pay');
+        };
+
+        function setupWhatsAppLink(username, registeredPhone) {
+            const message = encodeURIComponent(
+                `Hello Admin, I have paid the seller fee for Cashiepa.\n\n` +
+                `Seller Username: ${username}\n` +
+                `Registered Phone Number: ${registeredPhone}\n\n` +
+                `Please verify and activate my Seller account.`
+            );
+            const waUrl = `https://wa.me/${CONFIG.ADMIN_PHONE}?text=${message}`;
+            document.getElementById('whatsapp-btn').href = waUrl;
+        }
+
+        // --- LOGIN ---
+        document.getElementById('loginForm').onsubmit = function(e) {
+            e.preventDefault();
+            const errorElement = document.getElementById('login-error');
+            errorElement.style.display = 'none';
+
+            const userIn = document.getElementById('login-user').value.trim();
+            const passIn = document.getElementById('login-pass').value;
+
+            let sellers = JSON.parse(localStorage.getItem(STORAGE_KEYS.SELLERS) || '[]');
+            const found = sellers.find(s => s.username === userIn && s.password === passIn);
+
+            if(found) {
+                loginUser(found);
+            } else {
+                showError(errorElement, "Denied: Invalid username or password.");
+            }
+        };
+
+        // --- PRODUCT POSTING VIA WHATSAPP ---
+        document.getElementById('postProductForm').onsubmit = function(e) {
+            e.preventDefault();
+
+            const session = JSON.parse(localStorage.getItem(STORAGE_KEYS.SESSION) || '{}');
+            const title = document.getElementById('prod-title').value.trim();
+            const price = document.getElementById('prod-price').value.trim();
+            const category = document.getElementById('prod-category').value;
+            const desc = document.getElementById('prod-desc').value.trim();
+
+            const message = encodeURIComponent(
+                `🛒 *NEW PRODUCT LISTING REQUEST*\n\n` +
+                `*Seller Username:* ${session.username || 'Unknown'}\n` +
+                `*Seller Contact:* ${session.phone || 'N/A'}\n\n` +
+                `📌 *Product Title:* ${title}\n` +
+                `💰 *Price:* ${price}\n` +
+                `📂 *Category:* ${category}\n` +
+                `📝 *Description:* ${desc}\n\n` +
+                `Please approve and list this product on Cashiepa!`
+            );
+
+            const waUrl = `https://wa.me/${CONFIG.ADMIN_PHONE}?text=${message}`;
+            
+            // Open WhatsApp in a new tab
+            window.open(waUrl, '_blank');
+            
+            // Reset form and close modal
+            document.getElementById('postProductForm').reset();
+            toggleProductModal(false);
+        };
+
+        function showError(element, msg) {
+            element.innerText = "❌ " + msg;
+            element.style.display = 'block';
+            return false;
+        }
+
+        function loginUser(seller) {
+            localStorage.setItem(STORAGE_KEYS.SESSION, JSON.stringify(seller));
+            renderApp(seller);
+        }
+
+        function renderApp(seller) {
+            document.getElementById('auth-page').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
+            document.getElementById('user-greeting').innerText = "Welcome Boss " + seller.givenName + "! (SELLER)";
+        }
+
+        function handleLogout() {
+            localStorage.removeItem(STORAGE_KEYS.SESSION);
+            location.reload();
+        }
+
+        function searchItems(query) {
+            const filter = query.toLowerCase();
+            const items = document.querySelectorAll('.product-item');
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                item.classList.toggle('hidden', !text.includes(filter));
+            });
+        }
+    </script>
+</body>
+</html>
