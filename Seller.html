@@ -106,6 +106,10 @@
         .btn:hover { background: #7dd3fc; transform: translateY(-2px); }
         .btn-whatsapp { background: var(--green); color: white; }
         .btn-whatsapp:hover { background: #16a34a; }
+        
+        /* Red Button Styling */
+        .btn-danger { background: var(--red); color: white; }
+        .btn-danger:hover { background: #dc2626; }
 
         .error-msg { 
             color: var(--red); 
@@ -116,6 +120,18 @@
             padding: 10px;
             border-radius: 8px;
             border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .success-msg {
+            color: var(--green);
+            font-size: 13px;
+            margin-top: 15px;
+            display: none;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            word-break: break-all;
         }
 
         .payment-box {
@@ -190,7 +206,6 @@
     <div id="auth-page">
         <div class="auth-container">
             
-            <!-- SELLER WELCOME -->
             <div id="view-welcome">
                 <i class="fa-solid fa-store" style="font-size: 50px; color: var(--primary); margin-bottom: 15px;"></i>
                 <h1 style="margin:0; color: var(--primary)">Cashiepa Sellers</h1>
@@ -205,7 +220,6 @@
                 </div>
             </div>
 
-            <!-- REGISTER SELLER FORM -->
             <div id="view-register" class="hidden">
                 <h2 style="margin-top:0">Register Seller Account</h2>
                 <form id="regForm">
@@ -250,7 +264,6 @@
                 <div class="toggle-link" onclick="showView('login')">Back to <span>Login</span></div>
             </div>
 
-            <!-- SELLER PAYMENT VIEW -->
             <div id="view-seller-pay" class="hidden">
                 <i class="fa-solid fa-credit-card" style="font-size: 40px; color: var(--primary); margin-bottom: 10px;"></i>
                 <h2 style="margin:0">Seller Activation</h2>
@@ -269,7 +282,6 @@
                 <div class="toggle-link" onclick="showView('login')">Already Activated? <span>Login Here</span></div>
             </div>
 
-            <!-- LOGIN VIEW -->
             <div id="view-login" class="hidden">
                 <h2 style="margin-top:0">Seller Login</h2>
                 <form id="loginForm">
@@ -282,15 +294,30 @@
                         <input type="password" id="login-pass" autocomplete="current-password" placeholder="••••••••" required>
                     </div>
                     <button type="submit" class="btn">Sign In to Dashboard</button>
+                    <button type="button" class="btn btn-danger" onclick="showView('forgot')">Forgot Password?</button>
                     <p id="login-error" class="error-msg"></p>
                 </form>
                 <div class="toggle-link" onclick="showView('register')">Need a Seller Account? <span>Register</span></div>
             </div>
 
+            <div id="view-forgot" class="hidden">
+                <h2 style="margin-top:0">Recover Password</h2>
+                <p style="font-size:13px; color:var(--muted)">Enter your registered username to retrieve your password.</p>
+                <form id="forgotForm">
+                    <div class="input-group">
+                        <label for="forgot-user">Username</label>
+                        <input type="text" id="forgot-user" placeholder="Enter username" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger">Retrieve Password</button>
+                    <p id="forgot-error" class="error-msg"></p>
+                    <p id="forgot-success" class="success-msg"></p>
+                </form>
+                <div class="toggle-link" onclick="showView('login')">Back to <span>Login</span></div>
+            </div>
+
         </div>
     </div>
 
-    <!-- SELLER DASHBOARD VIEW -->
     <div id="main-app">
         <nav class="navbar">
             <span style="font-weight:700; color:var(--primary); font-size: 22px; letter-spacing: -1px;">Cashiepa Seller Dashboard</span>
@@ -322,7 +349,6 @@
         </div>
     </div>
 
-    <!-- POST PRODUCT MODAL -->
     <div id="product-modal" class="modal-overlay hidden">
         <div class="modal-card">
             <span class="close-btn" onclick="toggleProductModal(false)">&times;</span>
@@ -386,7 +412,7 @@
         };
 
         function showView(viewId) {
-            const views = ['view-welcome', 'view-register', 'view-seller-pay', 'view-login'];
+            const views = ['view-welcome', 'view-register', 'view-seller-pay', 'view-login', 'view-forgot'];
             views.forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById('view-' + viewId).classList.remove('hidden');
         }
@@ -497,6 +523,26 @@
                 loginUser(found);
             } else {
                 showError(errorElement, "Denied: Invalid username or password.");
+            }
+        };
+
+        // --- FORGOT PASSWORD RECOVERY ---
+        document.getElementById('forgotForm').onsubmit = function(e) {
+            e.preventDefault();
+            const errorElement = document.getElementById('forgot-error');
+            const successElement = document.getElementById('forgot-success');
+            errorElement.style.display = 'none';
+            successElement.style.display = 'none';
+
+            const usernameInput = document.getElementById('forgot-user').value.trim();
+            let sellers = JSON.parse(localStorage.getItem(STORAGE_KEYS.SELLERS) || '[]');
+            const user = sellers.find(s => s.username === usernameInput);
+
+            if (user) {
+                successElement.innerText = "🔑 Your password is: " + user.password;
+                successElement.style.display = 'block';
+            } else {
+                showError(errorElement, "Username not registered.");
             }
         };
 
