@@ -89,12 +89,20 @@ html, body {
   margin-top: 20px;
 }
 
+/* LOGO IMAGE STYLING */
 .hero-logo {
-  width: 120px;
-  max-width: 60%;
+  width: 160px;
+  max-width: 70%;
   height: auto;
   display: block;
   margin: 0 auto 15px;
+  object-fit: contain;
+}
+
+.nav-logo {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
 }
 
 .landing-links {
@@ -400,8 +408,7 @@ footer {
 
 <div id="landing-page">
   <div class="hero-box">
-    <img src="cashiepa.png" alt="Cashiepa Logo" class="hero-logo">
-    <h1 style="color:var(--primary); font-size: 1.8rem;">Cashiepa</h1>
+    <img src="logo-search-grid-2x.png" alt="Cashiepa Logo" class="hero-logo">
     <p style="color:var(--muted); margin-top: 5px;">The Ultimate Easy Trade</p>
     
     <label style="display:flex; align-items:center; justify-content:center; gap:8px; margin:20px 0; cursor:pointer;">
@@ -449,7 +456,9 @@ footer {
 
 <div id="main-app">
   <nav class="navbar">
-    <span style="font-weight:700; color:var(--primary); font-size: 1.1rem;">Cashiepa</span>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <img src="logo-search-grid-2x.png" alt="Cashiepa Logo" class="nav-logo">
+    </div>
     
     <div style="position:relative;">
       <i class="fa fa-bars" id="hamburger-icon" style="cursor:pointer; font-size:20px; color:var(--text); padding: 5px;"></i>
@@ -624,7 +633,7 @@ function filterProducts() {
 function sendListingToWhatsApp(event) {
   event.preventDefault(); // Stop default form submit action
 
-  // 1. My WhatsApp number (MUST be digits only, no '+' sign)
+  // 1. WhatsApp number
   const myWhatsAppNumber = "256754958464"; 
 
   // 2. Get inputs from form
@@ -661,7 +670,7 @@ Please confirm and approve this listing to add it to Cashiepa.`;
   // 6. Reset form fields
   document.getElementById("sellItemForm").reset();
 
-  // 7. Open seller's WhatsApp directly to your chat
+  // 7. Open seller's WhatsApp directly to chat
   setTimeout(() => {
     window.open(whatsappUrl, "_blank");
   }, 1000);
