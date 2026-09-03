@@ -464,7 +464,7 @@ footer {
       <div id="hamburger-dropdown" style="display:none; position:absolute; top:35px; left:0; background:var(--card); border:1px solid var(--border); border-radius:8px; width:140px; flex-direction:column; z-index:200;">
         <a href="#buy" style="padding:10px 15px; color:var(--text); text-decoration:none; border-bottom:1px solid var(--border)">Buy</a>
         <a href="#sell" style="padding:10px 15px; color:var(--text); text-decoration:none; border-bottom:1px solid var(--border)">Sell</a>
-        <a href="#products" style="padding:10px 15px; color:var(--text); text-decoration:none; border-bottom:1px solid var(--border)">Products</a>
+        <a href="#buy" style="padding:10px 15px; color:var(--text); text-decoration:none; border-bottom:1px solid var(--border)">Products</a>
         <a href="#signout" onclick="location.reload()" style="padding:10px 15px; color:var(--text); text-decoration:none;">Sign Out</a>
       </div>
     </div>
@@ -539,15 +539,58 @@ footer {
 </div>
 
 <script>
-// LOGO IMAGE URL
+// EMBEDDED LOGO URL
 const CASHIEPA_LOGO_DATA = "https://i.imgur.com/QeuNhgO.png";
 
-// SET LOGO IN HERO & NAVBAR AUTOMATICALLY
+// DEFAULT / FALLBACK PRODUCTS DATA
+let allProducts = [
+  {
+    id: 1,
+    name: "iPhone 15 Pro",
+    price: 999,
+    location: "Kampala",
+    image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=200&q=80",
+    phone: "256700000000"
+  },
+  {
+    id: 2,
+    name: "MacBook Air M2",
+    price: 1199,
+    location: "Entebbe",
+    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=200&q=80",
+    phone: "256700000000"
+  },
+  {
+    id: 3,
+    name: "PlayStation 5 Console",
+    price: 499,
+    location: "Jinja",
+    image: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=200&q=80",
+    phone: "256700000000"
+  }
+];
+
+// INITIAL SETUP
 window.addEventListener('DOMContentLoaded', () => {
   const heroImg = document.getElementById("main-logo-hero");
   const navImg = document.getElementById("main-logo-nav");
   if(heroImg) heroImg.src = CASHIEPA_LOGO_DATA;
   if(navImg) navImg.src = CASHIEPA_LOGO_DATA;
+
+  // Toggle Hamburger Dropdown
+  const hamburgerIcon = document.getElementById("hamburger-icon");
+  const hamburgerDropdown = document.getElementById("hamburger-dropdown");
+  if (hamburgerIcon && hamburgerDropdown) {
+    hamburgerIcon.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const currentDisplay = hamburgerDropdown.style.display;
+      hamburgerDropdown.style.display = currentDisplay === "flex" ? "none" : "flex";
+    });
+
+    document.addEventListener("click", () => {
+      hamburgerDropdown.style.display = "none";
+    });
+  }
 });
 
 window.addEventListener('load', () => {
@@ -556,22 +599,158 @@ window.addEventListener('load', () => {
     document.getElementById("landing-page").style.display = "flex";
   }, 1200);
 
-  // Fetch product data from JSON file
   loadProductsFromJSON();
+  startSlideshow();
 });
 
+// ENTER APP FUNCTION
 function enterApp() {
-  const termsChecked = document.getElementById("terms").checked;
+  const termsCheckbox = document.getElementById("terms");
   const msg = document.getElementById("msg");
-  if (!termsChecked) {
+
+  if (!termsCheckbox.checked) {
     msg.style.color = "var(--red)";
-    msg.innerText = "Please agree to the terms to proceed.";
+    msg.textContent = "Please agree to the terms to continue.";
     return;
   }
+
   document.getElementById("landing-page").style.display = "none";
   document.getElementById("main-app").style.display = "flex";
 }
-</script>
 
+// LOAD & DISPLAY PRODUCTS
+function loadProductsFromJSON() {
+  fetch('products.json')
+    .then(response => {
+      if (!response.ok) throw new Error("JSON not found");
+      return response.json();
+    })
+    .then(data => {
+      if (Array.isArray(data) && data.length > 0) {
+        allProducts = data;
+      }
+      renderProducts(allProducts);
+    })
+    .catch(() => {
+      // Fallback to initial local products
+      renderProducts(allProducts);
+    });
+}
+
+function renderProducts(products) {
+  const container = document.getElementById("product-list");
+  if (!container) return;
+  container.innerHTML = "";
+
+  if (products.length === 0) {
+    container.innerHTML = `<p style="color:var(--muted); text-align:center; margin-top:20px;">No products found.</p>`;
+    return;
+  }
+
+  products.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "product-item";
+    card.innerHTML = `
+      <div class="product-left">
+        <img src="${item.image}" alt="${item.name}" class="item-img" onerror="this.src='https://via.placeholder.com/55?text=Item'">
+        <div>
+          <strong style="display:block; font-size:0.95rem;">${item.name}</strong>
+          <span style="color:var(--primary); font-weight:700;">$${item.price}</span>
+          <div class="product-location"><i class="fa-solid fa-location-dot"></i> ${item.location}</div>
+        </div>
+      </div>
+      <button class="action-buy-now" onclick="openBuyModal('${escapeHTML(item.name)}', '${item.price}', '${escapeHTML(item.location)}', '${item.phone}')">Buy</button>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function escapeHTML(str) {
+  return String(str).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+}
+
+// FILTER PRODUCTS
+function filterProducts() {
+  const query = (document.getElementById("productSearch")?.value || "").toLowerCase();
+  const maxPrice = parseFloat(document.getElementById("maxPriceInput")?.value);
+  const locationQuery = (document.getElementById("locationInput")?.value || "").toLowerCase();
+
+  const filtered = allProducts.filter(item => {
+    const matchesSearch = item.name.toLowerCase().includes(query);
+    const matchesPrice = isNaN(maxPrice) || item.price <= maxPrice;
+    const matchesLoc = item.location.toLowerCase().includes(locationQuery);
+    return matchesSearch && matchesPrice && matchesLoc;
+  });
+
+  renderProducts(filtered);
+}
+
+// SLIDESHOW ANIMATION
+function startSlideshow() {
+  const slideshow = document.getElementById("featured-slideshow");
+  if (!slideshow) return;
+  let index = 0;
+  const totalSlides = slideshow.children.length;
+
+  setInterval(() => {
+    index = (index + 1) % totalSlides;
+    slideshow.style.transform = `translateX(-${index * 100}%)`;
+  }, 3500);
+}
+
+// BUY MODAL HANDLERS
+function openBuyModal(name, price, location, phone) {
+  document.getElementById("modalItemTitle").textContent = name;
+  document.getElementById("modalItemPrice").textContent = `$${price}`;
+  document.getElementById("modalItemLoc").textContent = `Location: ${location}`;
+
+  const cleanPhone = (phone || "").replace(/[^0-9]/g, "");
+  const waMsg = encodeURIComponent(`Hello! I am interested in buying *${name}* listed for $${price} on Cashiepa.`);
+  const waBtn = document.getElementById("whatsappBtn");
+
+  waBtn.href = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waMsg}` : `https://wa.me/?text=${waMsg}`;
+
+  document.getElementById("buyModal").style.display = "flex";
+}
+
+function closeBuyModal() {
+  document.getElementById("buyModal").style.display = "none";
+}
+
+// SUBMIT NEW LISTING TO WHATSAPP
+function sendListingToWhatsApp(event) {
+  event.preventDefault();
+
+  const name = document.getElementById("itemName").value;
+  const price = document.getElementById("itemPrice").value;
+  const location = document.getElementById("itemLocation").value;
+  const image = document.getElementById("itemImage").value;
+  const phone = document.getElementById("sellerPhone").value;
+
+  const newItem = {
+    id: Date.now(),
+    name,
+    price: parseFloat(price),
+    location,
+    image,
+    phone
+  };
+
+  allProducts.unshift(newItem);
+  renderProducts(allProducts);
+
+  const subMsg = document.getElementById("submissionMsg");
+  subMsg.style.display = "block";
+  subMsg.textContent = "Listing submitted successfully! Redirecting to WhatsApp for verification...";
+
+  const waText = encodeURIComponent(`New Cashiepa Listing Submission:\n\n*Product:* ${name}\n*Price:* $${price}\n*Location:* ${location}\n*Image URL:* ${image}\n*Seller Contact:* ${phone}`);
+  
+  setTimeout(() => {
+    window.open(`https://wa.me/?text=${waText}`, '_blank');
+    document.getElementById("sellItemForm").reset();
+    subMsg.style.display = "none";
+  }, 1500);
+}
+</script>
 </body>
 </html>
