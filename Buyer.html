@@ -114,8 +114,29 @@
             border: 1px solid rgba(239, 68, 68, 0.2);
         }
 
-        .toggle-link { margin-top: 20px; font-size: 13px; color: var(--muted); cursor: pointer; }
+        .success-msg { 
+            color: var(--green); 
+            font-size: 13px; 
+            margin-top: 15px; 
+            display: none; 
+            background: rgba(34, 197, 94, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .toggle-link { margin-top: 15px; font-size: 13px; color: var(--muted); cursor: pointer; }
         .toggle-link span { color: var(--primary); font-weight: 600; }
+
+        .forgot-link {
+            display: block;
+            text-align: right;
+            font-size: 12px;
+            color: var(--primary);
+            margin-top: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
 
         /* --- MARKETPLACE APP --- */
         #main-app { display: none; padding-top: 90px; flex-direction: column; align-items: center; }
@@ -135,20 +156,53 @@
 
         .content-area { width: 90%; max-width: 1000px; margin-bottom: 50px; }
 
-        .product-grid {
+        .product-grid, .buyers-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
         }
 
-        .product-item {
+        .product-item, .buyer-card {
             background: var(--card); border: 1px solid var(--border);
             border-radius: 15px; padding: 20px; display: flex; align-items: center; gap: 15px;
             transition: transform 0.2s;
         }
-        .product-item:hover { transform: scale(1.02); }
+        .product-item:hover, .buyer-card:hover { transform: scale(1.02); }
 
-        .item-img { width: 60px; height: 60px; background: var(--bg); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+        .item-img, .buyer-avatar { 
+            width: 60px; height: 60px; background: var(--bg); border-radius: 12px; 
+            display: flex; align-items: center; justify-content: center; font-size: 24px; 
+        }
+
+        .buyer-card { justify-content: space-between; }
+        
+        .buyer-info h4 {
+            margin: 0;
+            color: var(--primary);
+            font-family: monospace;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .buyer-status {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 20px;
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--green);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            font-weight: 600;
+        }
+
+        .section-title {
+            margin: 40px 0 20px 0;
+            font-size: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
         .hidden { display: none !important; }
     </style>
@@ -193,7 +247,7 @@
                     </div>
                     <div class="input-group">
                         <label for="reg-pass">Strong Password</label>
-                        <input type="password" id="reg-pass" autocomplete="new-password" placeholder="••••••••" required oninput="checkStrength(this.value)">
+                        <input type="password" id="reg-pass" autocomplete="new-password" placeholder="••••••••" required oninput="checkStrength(this.value, 'strength-bar', 'strength-text')">
                         <div class="strength-meter">
                             <div id="strength-bar" class="strength-bar"></div>
                         </div>
@@ -215,12 +269,40 @@
                     <div class="input-group">
                         <label for="login-pass">Password</label>
                         <input type="password" id="login-pass" autocomplete="current-password" placeholder="••••••••" required>
+                        <span class="forgot-link" onclick="showView('forgot')">Forgot Password?</span>
                     </div>
                     <button type="submit" class="btn">Sign In</button>
                     <p id="login-error" class="error-msg"></p>
                 </form>
                 <div class="toggle-link" onclick="showView('register')">Need an account? <span>Register</span></div>
             </div>
+
+            <div id="view-forgot" class="hidden">
+                <h2 style="margin-top:0">Reset Password</h2>
+                <form id="forgotForm">
+                    <div class="input-group">
+                        <label for="reset-identifier">Username or Email</label>
+                        <input type="text" id="reset-identifier" placeholder="Enter Username or Email" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="reset-phone">Registered Phone (+Country Code)</label>
+                        <input type="tel" id="reset-phone" placeholder="+1234567890" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="reset-pass">New Strong Password</label>
+                        <input type="password" id="reset-pass" placeholder="••••••••" required oninput="checkStrength(this.value, 'reset-strength-bar', 'reset-strength-text')">
+                        <div class="strength-meter">
+                            <div id="reset-strength-bar" class="strength-bar"></div>
+                        </div>
+                        <div id="reset-strength-text" class="strength-text"></div>
+                    </div>
+                    <button type="submit" class="btn">Update Password</button>
+                    <p id="forgot-error" class="error-msg"></p>
+                    <p id="forgot-success" class="success-msg"></p>
+                </form>
+                <div class="toggle-link" onclick="showView('login')">Back to <span>Login</span></div>
+            </div>
+
         </div>
     </div>
 
@@ -229,32 +311,80 @@
             <span style="font-weight:700; color:var(--primary); font-size: 22px; letter-spacing: -1px;">Cashiepa</span>
             <div class="search-container">
                 <i class="fa fa-search" style="color:var(--muted)"></i>
-                <input type="text" placeholder="Search marketplace..." onkeyup="searchItems(this.value)">
+                <input type="text" placeholder="Search products or buyers..." onkeyup="searchItems(this.value)">
             </div>
             <button onclick="handleLogout()" style="background:none; border:none; color:var(--red); font-weight:bold; cursor:pointer; font-size: 14px;">Sign Out</button>
         </nav>
 
         <div class="content-area">
             <h2 id="user-greeting">Welcome!</h2>
+            
+            <div class="section-title"><i class="fa-solid fa-store" style="color:var(--primary)"></i> Featured Products</div>
             <div class="product-grid">
-                <div class="product-item">
+                <div class="product-item search-target">
                     <div class="item-img">📱</div>
                     <div><h4 style="margin:0">iPhone 15 Pro</h4><p style="color:var(--primary); margin:5px 0">$999</p></div>
                 </div>
-                <div class="product-item">
+                <div class="product-item search-target">
                     <div class="item-img">💻</div>
                     <div><h4 style="margin:0">MacBook Pro M3</h4><p style="color:var(--primary); margin:5px 0">$1,299</p></div>
                 </div>
-                <div class="product-item">
+                <div class="product-item search-target">
                     <div class="item-img">🎧</div>
                     <div><h4 style="margin:0">AirPods Max</h4><p style="color:var(--primary); margin:5px 0">$549</p></div>
+                </div>
+            </div>
+
+            <div class="section-title"><i class="fa-solid fa-user-shield" style="color:var(--primary)"></i> Anonymous Buyers Network</div>
+            <div class="buyers-grid">
+                <div class="buyer-card search-target">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="buyer-avatar">🥷</div>
+                        <div class="buyer-info">
+                            <h4>GHOST_VIPER</h4>
+                            <p style="margin:2px 0 0 0; font-size:12px; color:var(--muted)">Orders: 14 Completed</p>
+                        </div>
+                    </div>
+                    <span class="buyer-status">Encrypted</span>
+                </div>
+
+                <div class="buyer-card search-target">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="buyer-avatar">🦅</div>
+                        <div class="buyer-info">
+                            <h4>SHADOW_FALCON</h4>
+                            <p style="margin:2px 0 0 0; font-size:12px; color:var(--muted)">Orders: 27 Completed</p>
+                        </div>
+                    </div>
+                    <span class="buyer-status">Encrypted</span>
+                </div>
+
+                <div class="buyer-card search-target">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="buyer-avatar">⚡</div>
+                        <div class="buyer-info">
+                            <h4>NEON_PHANTOM</h4>
+                            <p style="margin:2px 0 0 0; font-size:12px; color:var(--muted)">Orders: 8 Completed</p>
+                        </div>
+                    </div>
+                    <span class="buyer-status">Encrypted</span>
+                </div>
+
+                <div class="buyer-card search-target">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="buyer-avatar">🐺</div>
+                        <div class="buyer-info">
+                            <h4>SILENT_WOLF</h4>
+                            <p style="margin:2px 0 0 0; font-size:12px; color:var(--muted)">Orders: 42 Completed</p>
+                        </div>
+                    </div>
+                    <span class="buyer-status">Encrypted</span>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Check Session on Start
         window.onload = function() {
             const session = localStorage.getItem('cashiepa_session');
             if(session) {
@@ -263,16 +393,15 @@
         };
 
         function showView(viewId) {
-            const views = ['view-welcome', 'view-register', 'view-login'];
+            const views = ['view-welcome', 'view-register', 'view-login', 'view-forgot'];
             views.forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById('view-' + viewId).classList.remove('hidden');
         }
 
-        // --- STRICT VALIDATION ---
-
-        function checkStrength(pass) {
-            const bar = document.getElementById('strength-bar');
-            const text = document.getElementById('strength-text');
+        // --- PASSWORD STRENGTH ---
+        function checkStrength(pass, barId, textId) {
+            const bar = document.getElementById(barId);
+            const text = document.getElementById(textId);
             let score = 0;
 
             if (pass.length > 7) score++;
@@ -312,14 +441,12 @@
             const surname = document.getElementById('reg-surname').value.trim();
             const given = document.getElementById('reg-given').value.trim();
 
-            // Strict Rules
             if (user.length < 4) return showError(errorElement, "Username must be 4+ characters.");
             if (surname.length < 2 || given.length < 2) return showError(errorElement, "Please enter your full names.");
             if (!validateEmail(email)) return showError(errorElement, "Invalid email format.");
             if (!validatePhone(phone)) return showError(errorElement, "Invalid phone. Use format: +123456789");
-            if (checkStrength(pass) < 3) return showError(errorElement, "Password must be 'Good' or 'Strong'.");
+            if (checkStrength(pass, 'strength-bar', 'strength-text') < 3) return showError(errorElement, "Password must be 'Good' or 'Strong'.");
 
-            // Save to Local Storage
             let users = JSON.parse(localStorage.getItem('cashiepa_users') || '[]');
             if (users.some(u => u.username === user || u.email === email)) {
                 return showError(errorElement, "Username or Email already exists.");
@@ -350,6 +477,45 @@
             }
         };
 
+        // --- FORGOT / RESET PASSWORD ---
+        document.getElementById('forgotForm').onsubmit = function(e) {
+            e.preventDefault();
+            const errorElement = document.getElementById('forgot-error');
+            const successElement = document.getElementById('forgot-success');
+            errorElement.style.display = 'none';
+            successElement.style.display = 'none';
+
+            const idIn = document.getElementById('reset-identifier').value.trim();
+            const phoneIn = document.getElementById('reset-phone').value.trim();
+            const newPass = document.getElementById('reset-pass').value;
+
+            let users = JSON.parse(localStorage.getItem('cashiepa_users') || '[]');
+            
+            // Find target account by matching username/email and phone
+            const userIndex = users.findIndex(u => (u.username === idIn || u.email === idIn) && u.phone === phoneIn);
+
+            if (userIndex === -1) {
+                return showError(errorElement, "Account details do not match our records.");
+            }
+
+            if (checkStrength(newPass, 'reset-strength-bar', 'reset-strength-text') < 3) {
+                return showError(errorElement, "Password must be 'Good' or 'Strong'.");
+            }
+
+            // Update user password in local storage
+            users[userIndex].password = newPass;
+            localStorage.setItem('cashiepa_users', JSON.stringify(users));
+
+            successElement.innerText = "✓ Password updated successfully! Redirection to login...";
+            successElement.style.display = 'block';
+
+            setTimeout(() => {
+                showView('login');
+                document.getElementById('forgotForm').reset();
+                successElement.style.display = 'none';
+            }, 2000);
+        };
+
         function showError(element, msg) {
             element.innerText = "❌ " + msg;
             element.style.display = 'block';
@@ -374,8 +540,8 @@
 
         function searchItems(query) {
             const filter = query.toLowerCase();
-            const items = document.querySelectorAll('.product-item');
-            items.forEach(item => {
+            const targets = document.querySelectorAll('.search-target');
+            targets.forEach(item => {
                 const text = item.innerText.toLowerCase();
                 item.classList.toggle('hidden', !text.includes(filter));
             });
