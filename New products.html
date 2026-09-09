@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cashiepa - Old Products & Clearance Deals</title>
+    <title>Cashiepa - New Products & Latest Deals</title>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -16,7 +16,7 @@
             --text: #f8fafc;
             --muted: #94a3b8;
             --green: #22c55e;
-            --accent: #f59e0b;
+            --accent: #38bdf8;
         }
 
         * { box-sizing: border-box; }
@@ -192,7 +192,6 @@
         }
 
         .price-tag { color: var(--green); font-weight: 700; font-size: 18px; }
-        .old-price { text-decoration: line-through; color: var(--muted); font-size: 13px; margin-right: 5px; }
 
         .location-tag {
             font-size: 12px;
@@ -203,7 +202,7 @@
         }
 
         .badge-clearance {
-            background: rgba(245, 158, 11, 0.15);
+            background: rgba(56, 189, 248, 0.15);
             color: var(--accent);
             border: 1px solid var(--accent);
             padding: 4px 10px;
@@ -299,10 +298,10 @@
 
     <!-- NAVBAR -->
     <nav class="navbar">
-        <a href="https://i.imgur.com/QeuNhgO.png  " class="brand-logo">CASHIEPA</a>
+        <a href=" https://i.imgur.com/QeuNhgO.png " class="brand-logo">CASHIEPA</a>
         <div class="nav-links">
-            <a href="New products.html" class="nav-link">New Products</a>
-            <a href="Old products.html" class="nav-link active">Old Deals</a>
+            <a href="New products.html" class="nav-link active">New Products</a>
+            <a href="Old products.html" class="nav-link">Old Deals</a>
         </div>
     </nav>
 
@@ -311,23 +310,23 @@
 
         <!-- HERO SECTION -->
         <div class="hero">
-            <h1>Old Stock & <span>Clearance Deals</span></h1>
-            <p>Order discounted items on WhatsApp or share products to 3 people to earn <strong>UGX 300</strong> cash reward!</p>
+            <h1>Brand New Stock & <span>Latest Arrivals</span></h1>
+            <p>Order fresh items directly on WhatsApp or share products with 3 people to earn <strong>UGX 300</strong> cash reward!</p>
         </div>
 
         <!-- 1. VERTICAL SLIDING HIGHLIGHTS -->
-        <div class="section-title"><i class="fa-solid fa-arrows-up-down"></i> Featured Vertical Offers (Earn UGX 300)</div>
+        <div class="section-title"><i class="fa-solid fa-arrows-up-down"></i> Featured New Arrivals (Earn UGX 300)</div>
         <div class="vertical-slider-container">
             <div class="vertical-slider-track" id="verticalTrack"></div>
         </div>
 
         <!-- 2. HORIZONTAL SLIDING CAROUSEL -->
-        <div class="section-title"><i class="fa-solid fa-arrows-left-right"></i> Horizontal Deals Strip (Swipe to explore)</div>
+        <div class="section-title"><i class="fa-solid fa-arrows-left-right"></i> Latest Tech Strip (Swipe to explore)</div>
         <div class="horizontal-slider-container" id="horizontalContainer"></div>
 
-        <!-- 3. ALL OLD PRODUCTS GRID -->
-        <div class="section-title"><i class="fa-solid fa-boxes-stacked"></i> All Discounted Old Products</div>
-        <div class="grid-2" id="oldProductsGrid"></div>
+        <!-- 3. ALL NEW PRODUCTS GRID -->
+        <div class="section-title"><i class="fa-solid fa-boxes-stacked"></i> All New Products</div>
+        <div class="grid-2" id="newProductsGrid"></div>
 
         <!-- ORDER & REWARD BANNER -->
         <div class="privacy-banner">
@@ -353,78 +352,76 @@
     <script>
         const WHATSAPP_NUMBER = "256754958464";
 
-        // 1. Featured Vertical Products Data
+        // 1. Featured Vertical New Products Data
         const verticalProducts = [
             {
-                id: "vert_01",
-                name: "Refurbished Dell Laptop",
-                price: 550000,
+                id: "new_vert_01",
+                name: "Brand New MacBook Air M2",
+                price: 3800000,
                 location: "Kampala",
                 image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&auto=format&fit=crop&q=60",
                 requiredShares: 3,
                 rewardAmount: 300
             },
             {
-                id: "vert_02",
-                name: "Samsung Galaxy Tab S6",
-                price: 420000,
-                location: "Mbarara",
-                image: "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&auto=format&fit=crop&q=60",
+                id: "new_vert_02",
+                name: "Samsung Galaxy S24 Ultra",
+                price: 4200000,
+                location: "Entebbe",
+                image: "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&auto=format&fit=crop&q=60",
                 requiredShares: 3,
                 rewardAmount: 300
             }
         ];
 
-        // 2. Horizontal Products Data
+        // 2. Horizontal New Products Data
         const horizontalProducts = [
             {
-                id: "horiz_01",
-                name: "Sony Studio Headphones",
-                price: 120000,
+                id: "new_horiz_01",
+                name: "Sony WH-1000XM5 Headphones",
+                price: 1350000,
                 location: "Kampala",
                 image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&auto=format&fit=crop&q=60",
                 requiredShares: 3,
                 rewardAmount: 300
             },
             {
-                id: "horiz_02",
-                name: "Canon DSLR Camera Body",
-                price: 750000,
+                id: "new_horiz_02",
+                name: "Apple Watch Series 9",
+                price: 1650000,
                 location: "Jinja",
-                image: "https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=400&auto=format&fit=crop&q=60",
+                image: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=400&auto=format&fit=crop&q=60",
                 requiredShares: 3,
                 rewardAmount: 300
             },
             {
-                id: "horiz_03",
-                name: "50mm Prime Lens",
-                price: 280000,
-                location: "Entebbe",
-                image: "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&auto=format&fit=crop&q=60",
+                id: "new_horiz_03",
+                name: "PlayStation 5 Slim (1TB)",
+                price: 2400000,
+                location: "Mbarara",
+                image: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=400&auto=format&fit=crop&q=60",
                 requiredShares: 3,
                 rewardAmount: 300
             }
         ];
 
-        // 3. Main Catalog Data
-        const oldProducts = [
+        // 3. Main New Catalog Data
+        const newProducts = [
             {
-                id: "old_01",
-                name: "HP EliteBook 840 G3",
-                originalPrice: 950000,
-                price: 650000,
+                id: "new_01",
+                name: "Dell XPS 13 Laptop (2025)",
+                price: 3200000,
                 location: "Kampala",
-                image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=500&auto=format&fit=crop&q=60",
+                image: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=500&auto=format&fit=crop&q=60",
                 requiredShares: 3,
                 rewardAmount: 300
             },
             {
-                id: "old_02",
-                name: "iPhone XR 64GB (Refurbished)",
-                originalPrice: 800000,
-                price: 520000,
+                id: "new_02",
+                name: "iPhone 15 Pro Max 256GB",
+                price: 4800000,
                 location: "Mukono",
-                image: "https://images.unsplash.com/photo-1510557880182-3d4d3cba35a5?w=500&auto=format&fit=crop&q=60",
+                image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500&auto=format&fit=crop&q=60",
                 requiredShares: 3,
                 rewardAmount: 300
             }
@@ -432,13 +429,13 @@
 
         // Local Storage handling for persistent share progress
         function getSavedShares() {
-            return JSON.parse(localStorage.getItem('cashiepa_old_shares') || '{}');
+            return JSON.parse(localStorage.getItem('cashiepa_new_shares') || '{}');
         }
 
         function saveShare(productId, count) {
             const current = getSavedShares();
             current[productId] = count;
-            localStorage.setItem('cashiepa_old_shares', JSON.stringify(current));
+            localStorage.setItem('cashiepa_new_shares', JSON.stringify(current));
         }
 
         // Render Vertical Slider
@@ -454,7 +451,7 @@
                 track.innerHTML += `
                     <div class="vertical-slide">
                         <div class="vertical-slide-info">
-                            <span class="badge-clearance">CLEARANCE DEAL</span>
+                            <span class="badge-clearance">NEW ARRIVAL</span>
                             <h3>${item.name}</h3>
                             <p style="color: var(--green); font-weight: bold; margin-bottom: 6px;">UGX ${item.price.toLocaleString()} • ${item.location}</p>
                             <div class="reward-badge" style="margin-bottom: 10px; padding: 4px 8px; font-size: 11px;">
@@ -484,7 +481,7 @@
                 container.innerHTML += `
                     <div class="horizontal-card">
                         <img src="${item.image}" alt="${item.name}">
-                        <span class="badge-clearance">DEAL</span>
+                        <span class="badge-clearance">NEW</span>
                         <h4>${item.name}</h4>
                         <p style="color: var(--green); font-weight: bold; font-size: 14px; margin: 2px 0;">UGX ${item.price.toLocaleString()}</p>
                         <div class="reward-badge" style="padding: 4px; font-size: 11px; margin-bottom: 8px;">
@@ -500,24 +497,23 @@
         }
 
         // Render Main Grid
-        function renderOldProductsGrid() {
-            const container = document.getElementById("oldProductsGrid");
+        function renderNewProductsGrid() {
+            const container = document.getElementById("newProductsGrid");
             container.innerHTML = "";
             const saved = getSavedShares();
 
-            oldProducts.forEach((item) => {
+            newProducts.forEach((item) => {
                 const count = saved[item.id] || 0;
                 const remaining = Math.max(0, item.requiredShares - count);
 
                 container.innerHTML += `
                     <div class="info-card">
-                        <span class="badge-clearance">DISCOUNTED STOCK</span>
+                        <span class="badge-clearance">BRAND NEW</span>
                         <img src="${item.image}" alt="${item.name}" class="product-img" loading="lazy">
                         <h3>${item.name}</h3>
                         
                         <div class="price-location">
                             <div>
-                                <span class="old-price">UGX ${item.originalPrice.toLocaleString()}</span>
                                 <span class="price-tag">UGX ${item.price.toLocaleString()}</span>
                             </div>
                             <span class="location-tag"><i class="fa-solid fa-location-dot"></i> ${item.location}</span>
@@ -567,7 +563,7 @@
         // WhatsApp Order Logic
         function buyItem(name, price, location, id) {
             const timestamp = new Date().toLocaleString('en-UG', { timeZone: 'Africa/Kampala' });
-            const message = `Hi Cashiepa,\n\nam ordering this product from cashiepa:\n` +
+            const message = `Hi Cashiepa,\n\nam ordering this new product from cashiepa:\n` +
                             `• Item: ${name}\n` +
                             `• Price: UGX ${price.toLocaleString()}\n` +
                             `• Location: ${location}\n` +
@@ -597,7 +593,7 @@
         function refreshAllViews() {
             renderVerticalSlider();
             renderHorizontalSlider();
-            renderOldProductsGrid();
+            renderNewProductsGrid();
         }
 
         // Auto-slide vertical banner every 4 seconds
