@@ -378,19 +378,6 @@ html, body {
   text-overflow: ellipsis;
 }
 
-/* Earn Badge */
-.reward-tag {
-  background: rgba(56, 189, 248, 0.15);
-  color: var(--primary);
-  border: 1px dashed var(--primary);
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 4px 6px;
-  border-radius: 6px;
-  text-align: center;
-  margin: 6px 0;
-}
-
 /* Vertical Products Grid / List */
 .product-vertical-list {
   display: flex;
@@ -466,7 +453,32 @@ html, body {
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
+  width: 100%;
+}
+
+.action-claim-btn {
+  background: var(--orange);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.72rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.03); }
+  100% { transform: scale(1); }
 }
 
 .btn {
@@ -682,7 +694,7 @@ footer {
         <a href="Buyer.html" class="action-btn" style="background:var(--primary); color:white"><i class="fa-solid fa-bag-shopping"></i> Buyer</a>
         <a href="Seller.html" class="action-btn" style="background:var(--muted); color:white"><i class="fa-solid fa-store"></i> Seller</a>
         <a href="Old products.html" class="action-btn buy-btn-action"><i class="fa-solid fa-cart-shopping"></i> Old Deals</a>
-        <a href="New-products.html" class="action-btn sell-btn-action"><i class="fa-solid fa-tag"></i> New Arrivals</a>
+        <a href="New-products.html" class="action-btn sell-btn-action"><i class="fa-solid fa-tag"></i> New Products </a>
       </div>
     </div>
 
@@ -760,6 +772,7 @@ footer {
 
 <script>
 const CASHIEPA_LOGO_DATA = "https://i.imgur.com/QeuNhgO.png";
+const CLAIM_WHATSAPP_NUMBER = "256754958464";
 
 // FEATURED ITEMS (MIX OF OLD & NEW)
 const featuredItems = [
@@ -783,6 +796,24 @@ let allProducts = [
   { id: 'p3', name: 'Apple Watch Series 9', price: 1350000, condition: 'New', location: 'Jinja', reward: 200, image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
   { id: 'p4', name: 'Used JBL Charge 5 Speaker', price: 320000, condition: 'Old', location: 'Kampala', reward: 100, image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=300&q=80', phone: '256754958464' }
 ];
+
+// UTILITY TO ESCAPE HTML
+function escapeHTML(str) {
+  return String(str).replace(/[&<>"']/g, function(m) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m];
+  });
+}
+
+// TOAST NOTIFICATION
+function showToast(msg) {
+  const toast = document.getElementById("toastMessage");
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.style.display = "block";
+  setTimeout(() => {
+    toast.style.display = "none";
+  }, 3500);
+}
 
 // SHARE STORAGE HANDLERS
 function getSharesData() {
@@ -897,21 +928,32 @@ function renderTrendingCarousel() {
 
     const card = document.createElement("div");
     card.className = "trending-card";
+    
+    // Check if shared at least 3 times
+    let shareControlHTML = '';
+    if (count >= 3) {
+      shareControlHTML = `
+        <button class="action-claim-btn" onclick="claimEarnings('${escapeHTML(item.name)}', ${item.reward || 100})">
+          <i class="fa-solid fa-gift"></i> Tap here to receive earnings
+        </button>
+      `;
+    } else {
+      shareControlHTML = `
+        <button class="action-share-btn" onclick="shareToEarn('${item.id}', '${escapeHTML(item.name)}', ${item.price}, ${item.reward || 100})">
+          <i class="fa-solid fa-share"></i> Share (${count}/3)
+        </button>
+      `;
+    }
+
     card.innerHTML = `
       <span class="badge-condition ${badgeClass}" style="width:fit-content">${item.condition}</span>
       <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/150'">
       <h4>${item.name}</h4>
       <strong style="color:var(--green); font-size:0.85rem">UGX ${item.price.toLocaleString()}</strong>
-      
-      <div class="reward-tag">
-        <i class="fa-solid fa-share-nodes"></i> Share & Earn UGX ${item.reward}
-      </div>
 
-      <div style="display:flex; gap:5px; margin-top:auto;">
-        <button class="action-buy-now" style="flex:1" onclick="openBuyModal('${escapeHTML(item.name)}', ${item.price}, '${escapeHTML(item.location)}', '${item.phone}', '${item.condition}')">Buy</button>
-        <button class="action-share-btn" onclick="shareToEarn('${item.id}', '${escapeHTML(item.name)}', ${item.price}, ${item.reward})">
-          <i class="fa-brands fa-whatsapp"></i> ${count}
-        </button>
+      <div style="display:flex; flex-direction:column; gap:5px; margin-top:auto; padding-top:8px;">
+        <button class="action-buy-now" onclick="openBuyModal('${escapeHTML(item.name)}', ${item.price}, '${escapeHTML(item.location)}', '${item.phone}', '${item.condition}')">Buy</button>
+        ${shareControlHTML}
       </div>
     `;
     container.appendChild(card);
@@ -934,6 +976,21 @@ function renderProducts(products) {
     const count = shares[item.id] || 0;
     const badgeClass = item.condition === 'New' ? 'badge-new' : 'badge-old';
 
+    let shareControlHTML = '';
+    if (count >= 3) {
+      shareControlHTML = `
+        <button class="action-claim-btn" onclick="claimEarnings('${escapeHTML(item.name)}', ${item.reward || 100})">
+          <i class="fa-solid fa-gift"></i> Tap here to receive earnings
+        </button>
+      `;
+    } else {
+      shareControlHTML = `
+        <button class="action-share-btn" onclick="shareToEarn('${item.id}', '${escapeHTML(item.name)}', ${item.price}, ${item.reward || 100})">
+          <i class="fa-solid fa-share"></i> Share (${count}/3)
+        </button>
+      `;
+    }
+
     const card = document.createElement("div");
     card.className = "product-item";
     card.innerHTML = `
@@ -949,27 +1006,36 @@ function renderProducts(products) {
 
       <div class="btn-actions-group">
         <button class="action-buy-now" onclick="openBuyModal('${escapeHTML(item.name)}', ${item.price}, '${escapeHTML(item.location)}', '${item.phone}', '${item.condition}')">Buy</button>
-        <button class="action-share-btn" onclick="shareToEarn('${item.id}', '${escapeHTML(item.name)}', ${item.price}, ${item.reward || 100})">
-          <i class="fa-solid fa-share"></i> Earn UGX ${item.reward || 100}
-        </button>
+        ${shareControlHTML}
       </div>
     `;
     container.appendChild(card);
   });
 }
 
-// SHARE TO EARN SYSTEM
+// SHARE ACTION (INCREMENT COUNT)
 function shareToEarn(id, name, price, reward) {
   const newCount = updateShareCount(id);
-  const text = encodeURIComponent(`Check out *${name}* for UGX ${price.toLocaleString()} on Cashiepa!\nOrder directly or share to earn rewards: ${window.location.href}`);
+  const text = encodeURIComponent(`Check out *${name}* for UGX ${price.toLocaleString()} on Cashiepa!\nOrder directly or share: ${window.location.href}`);
   
   window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
   
-  showToast(`🎉 Shared successfully! (${newCount} times). UGX ${reward} share reward tracked.`);
+  if (newCount >= 3) {
+    showToast(`🎉 Shared 3 times! Tap the button to claim UGX ${reward}.`);
+  } else {
+    showToast(`Shared ${newCount}/3 times. Share ${3 - newCount} more time(s) to claim reward.`);
+  }
   
-  // Refresh views to update counts
+  // Refresh views to update share buttons
   renderTrendingCarousel();
   renderProducts(allProducts);
+}
+
+// CLAIM EARNINGS VIA WHATSAPP (+256754958464)
+function claimEarnings(itemName, rewardAmount) {
+  const message = `I have shared this item: ${itemName}, and I earned ugx ${rewardAmount}`;
+  const waUrl = `https://wa.me/${CLAIM_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(waUrl, '_blank');
 }
 
 // FILTER SYSTEM
@@ -1058,19 +1124,7 @@ function sendListingToWhatsApp(event) {
     window.open(`https://wa.me/${phone}?text=${waText}`, '_blank');
     document.getElementById("sellItemForm").reset();
     subMsg.style.display = "none";
-  }, 1200);
-}
-
-// UTILITY TOAST
-function showToast(msg) {
-  const toast = document.getElementById("toastMessage");
-  toast.innerHTML = msg;
-  toast.style.display = "block";
-  setTimeout(() => { toast.style.display = "none"; }, 4000);
-}
-
-function escapeHTML(str) {
-  return String(str).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+  }, 1500);
 }
 </script>
 </body>
