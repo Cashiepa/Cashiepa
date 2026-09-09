@@ -456,13 +456,14 @@ html, body {
   justify-content: center;
   gap: 4px;
   width: 100%;
+  text-align: center;
 }
 
 .action-claim-btn {
   background: var(--orange);
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 6px 10px;
   border-radius: 6px;
   font-weight: 700;
   font-size: 0.72rem;
@@ -473,6 +474,7 @@ html, body {
   gap: 4px;
   width: 100%;
   animation: pulse 1.5s infinite;
+  text-align: center;
 }
 
 @keyframes pulse {
@@ -783,18 +785,18 @@ const featuredItems = [
 
 // TRENDING PRODUCTS (FOR HORIZONTAL CAROUSEL)
 const trendingProducts = [
-  { id: 't1', name: 'Wireless AirPods Pro 2', price: 450000, condition: 'New', location: 'Kampala', reward: 200, image: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
-  { id: 't2', name: 'Used Sony WH-1000XM4', price: 650000, condition: 'Old', location: 'Jinja', reward: 100, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
-  { id: 't3', name: 'Samsung Galaxy S23 Ultra', price: 2800000, condition: 'New', location: 'Kampala', reward: 200, image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
-  { id: 't4', name: 'Second Hand Dell XPS 13', price: 1400000, condition: 'Old', location: 'Mukono', reward: 100, image: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=300&q=80', phone: '256754958464' }
+  { id: 't1', name: 'Wireless AirPods Pro 2', price: 450000, condition: 'New', location: 'Kampala', reward: 300, image: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
+  { id: 't2', name: 'Used Sony WH-1000XM4', price: 650000, condition: 'Old', location: 'Jinja', reward: 500, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
+  { id: 't3', name: 'Samsung Galaxy S23 Ultra', price: 2800000, condition: 'New', location: 'Kampala', reward: 1000, image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
+  { id: 't4', name: 'Second Hand Dell XPS 13', price: 1400000, condition: 'Old', location: 'Mukono', reward: 500, image: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=300&q=80', phone: '256754958464' }
 ];
 
 // MAIN VERTICAL PRODUCTS LIST
 let allProducts = [
-  { id: 'p1', name: 'iPhone 15 Pro Max 256GB', price: 4200000, condition: 'New', location: 'Kampala', reward: 200, image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
-  { id: 'p2', name: 'Used HP Spectre x360', price: 1950000, condition: 'Old', location: 'Entebbe', reward: 100, image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
-  { id: 'p3', name: 'Apple Watch Series 9', price: 1350000, condition: 'New', location: 'Jinja', reward: 200, image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
-  { id: 'p4', name: 'Used JBL Charge 5 Speaker', price: 320000, condition: 'Old', location: 'Kampala', reward: 100, image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=300&q=80', phone: '256754958464' }
+  { id: 'p1', name: 'iPhone 15 Pro Max 256GB', price: 4200000, condition: 'New', location: 'Kampala', reward: 1000, image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
+  { id: 'p2', name: 'Used HP Spectre x360', price: 1950000, condition: 'Old', location: 'Entebbe', reward: 500, image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
+  { id: 'p3', name: 'Apple Watch Series 9', price: 1350000, condition: 'New', location: 'Jinja', reward: 300, image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
+  { id: 'p4', name: 'Used JBL Charge 5 Speaker', price: 320000, condition: 'Old', location: 'Kampala', reward: 300, image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=300&q=80', phone: '256754958464' }
 ];
 
 // UTILITY TO ESCAPE HTML
@@ -925,6 +927,7 @@ function renderTrendingCarousel() {
   trendingProducts.forEach(item => {
     const count = shares[item.id] || 0;
     const badgeClass = item.condition === 'New' ? 'badge-new' : 'badge-old';
+    const rewardAmount = item.reward || 300;
 
     const card = document.createElement("div");
     card.className = "trending-card";
@@ -933,14 +936,14 @@ function renderTrendingCarousel() {
     let shareControlHTML = '';
     if (count >= 3) {
       shareControlHTML = `
-        <button class="action-claim-btn" onclick="claimEarnings('${escapeHTML(item.name)}', ${item.reward || 100})">
-          <i class="fa-solid fa-gift"></i> Tap here to receive earnings
+        <button class="action-claim-btn" onclick="claimEarnings('${escapeHTML(item.name)}', ${rewardAmount})">
+          <i class="fa-solid fa-gift"></i> Redeem your earnings
         </button>
       `;
     } else {
       shareControlHTML = `
-        <button class="action-share-btn" onclick="shareToEarn('${item.id}', '${escapeHTML(item.name)}', ${item.price}, ${item.reward || 100})">
-          <i class="fa-solid fa-share"></i> Share (${count}/3)
+        <button class="action-share-btn" onclick="shareToEarn('${item.id}', '${escapeHTML(item.name)}', ${item.price}, ${rewardAmount})">
+          <i class="fa-solid fa-share"></i> Share and earn UGX ${rewardAmount} (${count}/3)
         </button>
       `;
     }
@@ -975,18 +978,19 @@ function renderProducts(products) {
   products.forEach(item => {
     const count = shares[item.id] || 0;
     const badgeClass = item.condition === 'New' ? 'badge-new' : 'badge-old';
+    const rewardAmount = item.reward || 300;
 
     let shareControlHTML = '';
     if (count >= 3) {
       shareControlHTML = `
-        <button class="action-claim-btn" onclick="claimEarnings('${escapeHTML(item.name)}', ${item.reward || 100})">
-          <i class="fa-solid fa-gift"></i> Tap here to receive earnings
+        <button class="action-claim-btn" onclick="claimEarnings('${escapeHTML(item.name)}', ${rewardAmount})">
+          <i class="fa-solid fa-gift"></i> Redeem your earnings
         </button>
       `;
     } else {
       shareControlHTML = `
-        <button class="action-share-btn" onclick="shareToEarn('${item.id}', '${escapeHTML(item.name)}', ${item.price}, ${item.reward || 100})">
-          <i class="fa-solid fa-share"></i> Share (${count}/3)
+        <button class="action-share-btn" onclick="shareToEarn('${item.id}', '${escapeHTML(item.name)}', ${item.price}, ${rewardAmount})">
+          <i class="fa-solid fa-share"></i> Share and earn UGX ${rewardAmount} (${count}/3)
         </button>
       `;
     }
@@ -1021,9 +1025,9 @@ function shareToEarn(id, name, price, reward) {
   window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
   
   if (newCount >= 3) {
-    showToast(`🎉 Shared 3 times! Tap the button to claim UGX ${reward}.`);
+    showToast(`🎉 Shared 3 times! Tap "Redeem your earnings" to claim UGX ${reward}.`);
   } else {
-    showToast(`Shared ${newCount}/3 times. Share ${3 - newCount} more time(s) to claim reward.`);
+    showToast(`Shared ${newCount}/3 times. Share ${3 - newCount} more time(s) to redeem UGX ${reward}.`);
   }
   
   // Refresh views to update share buttons
@@ -1033,7 +1037,13 @@ function shareToEarn(id, name, price, reward) {
 
 // CLAIM EARNINGS VIA WHATSAPP (+256754958464)
 function claimEarnings(itemName, rewardAmount) {
-  const message = `I have shared this item: ${itemName}, and I earned ugx ${rewardAmount}`;
+  const userPhone = prompt("Enter your phone number to receive payment:");
+  if (!userPhone || userPhone.trim() === "") {
+    alert("Phone number is required to receive payment!");
+    return;
+  }
+  
+  const message = `Confirm my earnings to this number ${userPhone.trim()}. I have shared this item: ${itemName}, and I earned ugx ${rewardAmount}`;
   const waUrl = `https://wa.me/${CLAIM_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
   window.open(waUrl, '_blank');
 }
@@ -1077,11 +1087,9 @@ function openBuyModal(name, price, location, phone, condition) {
   badge.textContent = condition;
   badge.className = `badge-condition ${condition === 'New' ? 'badge-new' : 'badge-old'}`;
 
-  const cleanPhone = (phone || "").replace(/[^0-9]/g, "");
-  const waMsg = encodeURIComponent(`Hello! I am interested in buying *${name}* listed for UGX ${price.toLocaleString()} on Cashiepa.`);
-  const waBtn = document.getElementById("whatsappBtn");
+  const text = encodeURIComponent(`Hello, I want to buy *${name}* for UGX ${price.toLocaleString()} from Cashiepa.`);
+  document.getElementById("whatsappBtn").href = `https://wa.me/${phone}?text=${text}`;
 
-  waBtn.href = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waMsg}` : `https://wa.me/?text=${waMsg}`;
   document.getElementById("buyModal").style.display = "flex";
 }
 
@@ -1089,42 +1097,32 @@ function closeBuyModal() {
   document.getElementById("buyModal").style.display = "none";
 }
 
-// WHATSAPP SUBMISSION
-function sendListingToWhatsApp(event) {
-  event.preventDefault();
-
+// SUBMIT LISTING HANDLER
+function sendListingToWhatsApp(e) {
+  e.preventDefault();
   const name = document.getElementById("itemName").value;
   const condition = document.getElementById("itemCondition").value;
-  const price = parseFloat(document.getElementById("itemPrice").value);
+  const price = document.getElementById("itemPrice").value;
   const location = document.getElementById("itemLocation").value;
   const image = document.getElementById("itemImage").value;
   const phone = document.getElementById("sellerPhone").value;
 
-  const newItem = {
-    id: 'user_' + Date.now(),
-    name,
-    condition,
-    price,
-    location,
-    reward: condition === 'New' ? 200 : 100,
-    image,
-    phone
-  };
+  const message = `*New Listing Request*\n\n` +
+    `*Product:* ${name}\n` +
+    `*Condition:* ${condition}\n` +
+    `*Price:* UGX ${parseFloat(price).toLocaleString()}\n` +
+    `*Location:* ${location}\n` +
+    `*Image URL:* ${image}\n` +
+    `*Seller Phone:* ${phone}`;
 
-  allProducts.unshift(newItem);
-  renderProducts(allProducts);
+  const waUrl = `https://wa.me/${CLAIM_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(waUrl, '_blank');
 
-  const subMsg = document.getElementById("submissionMsg");
-  subMsg.style.display = "block";
-  subMsg.textContent = "Listing created! Opening WhatsApp to verify...";
-
-  const waText = encodeURIComponent(`New Cashiepa Listing:\n*Item:* ${name} (${condition})\n*Price:* UGX ${price.toLocaleString()}\n*Location:* ${location}\n*Image:* ${image}\n*Contact:* ${phone}`);
+  const submissionMsg = document.getElementById("submissionMsg");
+  submissionMsg.style.display = "block";
+  submissionMsg.textContent = "Your item listing has been opened in WhatsApp for review!";
   
-  setTimeout(() => {
-    window.open(`https://wa.me/${phone}?text=${waText}`, '_blank');
-    document.getElementById("sellItemForm").reset();
-    subMsg.style.display = "none";
-  }, 1500);
+  document.getElementById("sellItemForm").reset();
 }
 </script>
 </body>
