@@ -8,7 +8,7 @@
 <meta http-equiv="X-Frame-Options" content="DENY">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
@@ -22,13 +22,15 @@
   --red: #ef4444;
   --green: #22c55e;
   --blue: #3b82f6;
+  --orange: #f97316;
+  --purple: #a855f7;
 }
 
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  transition: all 0.25s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 html, body {
@@ -99,7 +101,7 @@ html, body {
 }
 
 .nav-logo {
-  height: 38px;
+  height: 32px;
   width: auto;
   object-fit: contain;
 }
@@ -142,13 +144,14 @@ html, body {
 /* Main App Wrapper */
 #main-app {
   display: none;
-  padding: 80px 15px 40px;
+  padding: 75px 15px 40px;
   min-height: 100vh;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
 
+/* NAVBAR & NAVIGATION */
 .navbar {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -157,9 +160,35 @@ html, body {
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 0 15px;
   z-index: 100;
-  gap: 12px;
+  gap: 10px;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.nav-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
 }
 
 .search-container {
@@ -179,9 +208,47 @@ html, body {
   width: 100%;
   outline: none;
   margin-left: 8px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
+/* Slide Drawer Menu */
+.menu-drawer {
+  position: fixed;
+  top: 65px;
+  left: -260px;
+  width: 250px;
+  height: calc(100vh - 65px);
+  background: var(--card);
+  border-right: 1px solid var(--border);
+  z-index: 99;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  transition: left 0.3s ease;
+}
+
+.menu-drawer.open {
+  left: 0;
+}
+
+.menu-drawer a {
+  padding: 12px 20px;
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.menu-drawer a:hover {
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--primary);
+}
+
+/* Content Area */
 .content-area {
   width: 100%;
   max-width: 650px;
@@ -205,87 +272,152 @@ html, body {
 }
 
 .action-btn {
-  padding: 10px 18px;
+  padding: 10px 16px;
   border-radius: 10px;
   text-decoration: none;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
 }
 
 .buy-btn-action { background: var(--green); color: white; }
 .sell-btn-action { background: var(--blue); color: white; }
 
-/* Filter Controls */
-.filter-bar {
+/* Section Header Badges */
+.section-heading {
+  border-left: 4px solid var(--primary);
+  padding-left: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 25px 0 12px 0;
   display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.filter-bar input {
-  flex: 1;
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: white;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  outline: none;
-}
-
-/* Slideshow */
+/* Slideshow - Old & New Featured */
 #featured-slideshow-container {
   width: 100%;
-  height: 100px;
+  height: 120px;
   overflow: hidden;
   border-radius: 15px;
   border: 1px solid var(--border);
-  margin: 15px 0 25px;
+  margin-bottom: 20px;
   position: relative;
   background: var(--card);
 }
 
 #featured-slideshow {
   display: flex;
-  transition: transform 0.8s ease;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
   height: 100%;
 }
 
-.slide {
+.slide-card {
   min-width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--text);
-}
-
-/* Products List */
-.product-item {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  padding: 12px 15px;
-  margin-top: 12px;
+  padding: 15px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 15px;
 }
 
+.slide-info h4 { font-size: 1.05rem; margin-bottom: 4px; }
+.slide-info p { color: var(--green); font-weight: 700; font-size: 0.95rem; }
+
+.badge-condition {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.badge-new { background: rgba(34, 197, 94, 0.2); color: var(--green); border: 1px solid var(--green); }
+.badge-old { background: rgba(249, 115, 22, 0.2); color: var(--orange); border: 1px solid var(--orange); }
+
+/* HORIZONTAL TRENDING CAROUSEL */
+.horizontal-carousel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  scrollbar-width: thin;
+}
+
+.trending-card {
+  min-width: 200px;
+  max-width: 200px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.trending-card img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.trending-card h4 {
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Earn Badge */
+.reward-tag {
+  background: rgba(56, 189, 248, 0.15);
+  color: var(--primary);
+  border: 1px dashed var(--primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 6px;
+  border-radius: 6px;
+  text-align: center;
+  margin: 6px 0;
+}
+
+/* Vertical Products Grid / List */
+.product-vertical-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.product-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 15px;
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
 .product-left {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .item-img {
-  width: 55px;
-  height: 55px;
+  width: 65px;
+  height: 65px;
   background: var(--bg);
   border-radius: 10px;
   object-fit: cover;
@@ -293,21 +425,48 @@ html, body {
   border: 1px solid var(--border);
 }
 
+.product-details {
+  display: flex;
+  flex-direction: column;
+}
+
 .product-location {
   color: var(--muted);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   margin-top: 2px;
+}
+
+.btn-actions-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
 }
 
 .action-buy-now {
   background: var(--green);
   color: white;
   border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.85rem;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.8rem;
   cursor: pointer;
+  width: 100%;
+}
+
+.action-share-btn {
+  background: rgba(56, 189, 248, 0.1);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .btn {
@@ -322,7 +481,7 @@ html, body {
   margin-top: 10px;
 }
 
-/* Form */
+/* Form Styles */
 .sell-form {
   background: var(--card);
   padding: 20px;
@@ -331,7 +490,7 @@ html, body {
   margin-top: 15px;
 }
 
-.sell-form input {
+.sell-form input, .sell-form select {
   width: 100%;
   padding: 12px;
   margin-top: 10px;
@@ -352,6 +511,24 @@ html, body {
 .social-icons a {
   color: var(--primary);
   font-size: 22px;
+}
+
+/* Filter Controls */
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.filter-bar input {
+  flex: 1;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  outline: none;
 }
 
 /* Modal Popup */
@@ -386,6 +563,22 @@ html, body {
   margin-top: 15px;
 }
 
+/* Toast Notifications */
+.toast-msg {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--card);
+  border: 1px solid var(--green);
+  color: var(--text);
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  display: none;
+  z-index: 1000;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
 footer {
   margin-top: 30px;
   padding: 20px 0;
@@ -400,11 +593,13 @@ footer {
 
 <body>
 
+<!-- LOADING SCREEN -->
 <div id="loading-screen">
   <h1 style="color:var(--primary)">Cashiepa</h1>
   <div class="loader-spinner"></div>
 </div>
 
+<!-- LANDING PAGE -->
 <div id="landing-page">
   <div class="hero-box">
     <img id="main-logo-hero" alt="Cashiepa Logo" class="hero-logo">
@@ -426,21 +621,20 @@ footer {
 
   <div id="about-us" class="landing-section">
     <h3>About Us</h3>
-    <p>Cashiepa is the ultimate online marketplace designed to make buying and selling fast, safe, and simple. Whether you're looking for gadgets, fashion, or unique second-hand items, Cashiepa connects you with a vibrant community.</p>
+    <p>Cashiepa connects buyers and sellers in Uganda with zero hassle. Browse trending gadgets, fashion, and share products to earn instant rewards!</p>
   </div>
 
   <div id="terms-services" class="landing-section">
     <h3>Terms & Services</h3>
-    <p>By using Cashiepa, you agree to follow our marketplace rules, respect other users, and abide by our policies.</p>
+    <p>By using Cashiepa, you agree to respect community guidelines, provide accurate product details, and comply with share-to-earn promotion rules.</p>
   </div>
 
   <div id="contact-us" class="landing-section">
     <h3>Contact Us</h3>
-    <p>Have questions or need support? Reach out to us through any of our channels below.</p>
+    <p>Have questions or need support? Reach out directly via WhatsApp or email.</p>
     <div class="social-icons">
       <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
       <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-      <a href="#" title="X / Twitter"><i class="fab fa-x-twitter"></i></a>
       <a href="#" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
     </div>
     <p style="margin-top:15px; text-align:center;">
@@ -448,89 +642,112 @@ footer {
     </p>
   </div>
 
-  <footer>
-    © 2026 Cashiepa. All Rights Reserved.
-  </footer>
+  <footer>© 2026 Cashiepa. All Rights Reserved.</footer>
 </div>
 
+<!-- MAIN APP -->
 <div id="main-app">
+  <!-- NAVIGATION BAR -->
   <nav class="navbar">
-    <div style="display: flex; align-items: center; gap: 8px;">
+    <div class="nav-left">
+      <button class="nav-btn" onclick="handleBackButton()" title="Back"><i class="fa-solid fa-arrow-left"></i></button>
+      <button class="nav-btn" id="menu-toggle-btn" title="Menu"><i class="fa-solid fa-bars"></i></button>
       <img id="main-logo-nav" alt="Cashiepa Logo" class="nav-logo">
     </div>
     
-    <div style="position:relative;">
-      <i class="fa fa-bars" id="hamburger-icon" style="cursor:pointer; font-size:20px; color:var(--text); padding: 5px;"></i>
-      <div id="hamburger-dropdown" style="display:none; position:absolute; top:35px; left:0; background:var(--card); border:1px solid var(--border); border-radius:8px; width:140px; flex-direction:column; z-index:200;">
-        <a href="#buy" style="padding:10px 15px; color:var(--text); text-decoration:none; border-bottom:1px solid var(--border)">Buy</a>
-        <a href="#sell" style="padding:10px 15px; color:var(--text); text-decoration:none; border-bottom:1px solid var(--border)">Sell</a>
-        <a href="#buy" style="padding:10px 15px; color:var(--text); text-decoration:none; border-bottom:1px solid var(--border)">Products</a>
-        <a href="#signout" onclick="location.reload()" style="padding:10px 15px; color:var(--text); text-decoration:none;">Sign Out</a>
-      </div>
-    </div>
-
     <div class="search-container">
       <i class="fa fa-search" style="color:var(--muted)"></i>
-      <input id="productSearch" type="text" placeholder="Search items..." onkeyup="filterProducts()">
+      <input id="productSearch" type="text" placeholder="Search items or location..." onkeyup="filterProducts()">
     </div>
   </nav>
 
+  <!-- SLIDE DRAWER MENU -->
+  <div class="menu-drawer" id="menuDrawer">
+    <a href="#featured-section" onclick="closeDrawer()"><i class="fa-solid fa-fire" style="color:var(--orange)"></i> Featured Deals</a>
+    <a href="#trending-section" onclick="closeDrawer()"><i class="fa-solid fa-chart-line" style="color:var(--primary)"></i> Trending Items</a>
+    <a href="#products-section" onclick="closeDrawer()"><i class="fa-solid fa-boxes-stacked" style="color:var(--green)"></i> All Products</a>
+    <a href="#sell" onclick="closeDrawer()"><i class="fa-solid fa-plus-circle" style="color:var(--purple)"></i> Sell Product</a>
+    <a href="Old products.html"><i class="fa-solid fa-clock-rotate-left"></i> Old Products</a>
+    <a href="New-products.html"><i class="fa-solid fa-sparkles"></i> New Products</a>
+    <a href="#signout" onclick="location.reload()"><i class="fa-solid fa-right-from-bracket" style="color:var(--red)"></i> Exit App</a>
+  </div>
+
   <div class="content-area">
+    
+    <!-- WELCOME & QUICK NAVIGATION -->
     <div class="welcome-box">
       <h2>Welcome to Cashiepa</h2>
-      <p style="color:var(--muted); font-size: 0.9rem; margin-top: 5px;">Buy and sell products easily</p>
+      <p style="color:var(--muted); font-size: 0.85rem; margin-top: 4px;">Buy, sell & share products to earn cash rewards!</p>
       <div class="action-buttons">
-        <a href="Buyer.html" class="action-btn" style="background:var(--primary); color:white">Buyer</a>
-        <a href="Seller.html" class="action-btn" style="background:var(--muted); color:white">Seller</a>
-        <a href="Old products.html" class="action-btn buy-btn-action"><i class="fa-solid fa-cart-shopping"></i> Old Products </a>
-        <a href="New-products.html" class="action-btn sell-btn-action"><i class="fa-solid fa-tag"></i> New products </a>
+        <a href="Buyer.html" class="action-btn" style="background:var(--primary); color:white"><i class="fa-solid fa-bag-shopping"></i> Buyer</a>
+        <a href="Seller.html" class="action-btn" style="background:var(--muted); color:white"><i class="fa-solid fa-store"></i> Seller</a>
+        <a href="Old products.html" class="action-btn buy-btn-action"><i class="fa-solid fa-cart-shopping"></i> Old Deals</a>
+        <a href="New-products.html" class="action-btn sell-btn-action"><i class="fa-solid fa-tag"></i> New Arrivals</a>
       </div>
     </div>
 
-    <h3 style="border-left:4px solid var(--primary); padding-left:10px;">Featured Items</h3>
+    <!-- 1. FEATURED SLIDESHOW (OLD AND NEW ITEMS) -->
+    <div class="section-heading" id="featured-section">
+      <span><i class="fa-solid fa-star" style="color:var(--primary)"></i> Featured Items (Old & New)</span>
+    </div>
     <div id="featured-slideshow-container">
-      <div id="featured-slideshow">
-        <div class="slide">🔥 iPhone 15 Pro</div>
-        <div class="slide">💻 MacBook Air</div>
-        <div class="slide">🎮 PlayStation 5</div>
-      </div>
+      <div id="featured-slideshow"></div>
     </div>
 
-    <h3 id="buy" style="border-left:4px solid var(--primary); padding-left:10px; margin-top: 20px; margin-bottom: 10px;">Products</h3>
-    
+    <!-- 2. TRENDING PRODUCTS (HORIZONTAL CAROUSEL) -->
+    <div class="section-heading" id="trending-section">
+      <span><i class="fa-solid fa-fire" style="color:var(--orange)"></i> Trending Products</span>
+      <span style="font-size:0.75rem; color:var(--muted)">Swipe →</span>
+    </div>
+    <div class="horizontal-carousel" id="trending-carousel"></div>
+
+    <!-- 3. ALL PRODUCTS LIST (VERTICAL LAYOUT) -->
+    <div class="section-heading" id="products-section">
+      <span><i class="fa-solid fa-layer-group" style="color:var(--green)"></i> Marketplace Items</span>
+    </div>
+
+    <!-- FILTERS -->
     <div class="filter-bar">
-      <input id="maxPriceInput" type="number" placeholder="Max Price ($)" onkeyup="filterProducts()">
-      <input id="locationInput" type="text" placeholder="Filter Location" onkeyup="filterProducts()">
+      <input id="maxPriceInput" type="number" placeholder="Max Price (UGX)" onkeyup="filterProducts()">
+      <input id="locationInput" type="text" placeholder="Filter Location (e.g. Kampala)" onkeyup="filterProducts()">
     </div>
 
-    <div id="product-list"></div>
+    <!-- VERTICAL PRODUCTS CONTAINER -->
+    <div class="product-vertical-list" id="product-list"></div>
 
-    <h3 id="sell" style="border-left:4px solid var(--primary); padding-left:10px; margin-top: 30px;">Sell Item</h3>
+    <!-- SELL ITEM FORM -->
+    <div class="section-heading" id="sell">
+      <span><i class="fa-solid fa-plus" style="color:var(--purple)"></i> Post New Item</span>
+    </div>
 
     <form id="sellItemForm" class="sell-form" onsubmit="sendListingToWhatsApp(event)">
       <input type="text" id="itemName" placeholder="Product name" required>
-      <input type="number" id="itemPrice" placeholder="Price ($)" required>
-      <input type="text" id="itemLocation" placeholder="Location (e.g. Kampala)" required>
-      <input type="text" id="itemImage" placeholder="Image URL (e.g. https://... or photo link)" required>
-      <input type="tel" id="sellerPhone" placeholder="Your Phone/WhatsApp (+256...)" required>
+      <select id="itemCondition" required>
+        <option value="New">Brand New</option>
+        <option value="Old">Used / Second Hand</option>
+      </select>
+      <input type="number" id="itemPrice" placeholder="Price (UGX)" required>
+      <input type="text" id="itemLocation" placeholder="Location (e.g. Kampala, Jinja)" required>
+      <input type="text" id="itemImage" placeholder="Image URL (e.g. https://...)" required>
+      <input type="tel" id="sellerPhone" placeholder="Your WhatsApp (+256...)" required>
 
       <button type="submit" class="btn" id="submitBtn">Submit for Review</button>
-      
-      <p id="submissionMsg" style="display:none; margin-top:15px; color:var(--primary); font-weight:600; text-align:center; line-height:1.4;"></p>
+      <p id="submissionMsg" style="display:none; margin-top:15px; color:var(--primary); font-weight:600; text-align:center;"></p>
     </form>
 
     <footer>© 2026 Cashiepa. All Rights Reserved.</footer>
   </div>
 </div>
 
+<!-- BUY MODAL -->
 <div class="modal" id="buyModal">
   <div class="modal-content">
-    <h3 style="color:var(--primary); margin-bottom: 8px;" id="modalItemTitle">Product Details</h3>
-    <p style="font-size: 1.2rem; font-weight:700;" id="modalItemPrice">$0</p>
+    <span id="modalConditionBadge" class="badge-condition badge-new">New</span>
+    <h3 style="color:var(--primary); margin-top: 5px;" id="modalItemTitle">Product Details</h3>
+    <p style="font-size: 1.2rem; font-weight:700; color:var(--green); margin-top: 5px;" id="modalItemPrice">UGX 0</p>
     <p style="color:var(--muted); font-size: 0.85rem; margin: 8px 0;" id="modalItemLoc"></p>
-    <p style="font-size:0.9rem; margin: 15px 0;">Connect directly with the seller:</p>
     
-    <a id="whatsappBtn" href="#" target="_blank" class="action-btn buy-btn-action" style="display:block; text-decoration:none; padding:10px;">
+    <a id="whatsappBtn" href="#" target="_blank" class="action-btn buy-btn-action" style="display:block; text-decoration:none; padding:12px; margin-top:15px;">
       <i class="fa-brands fa-whatsapp"></i> Order via WhatsApp
     </a>
 
@@ -538,72 +755,83 @@ footer {
   </div>
 </div>
 
+<!-- TOAST NOTIFICATION -->
+<div class="toast-msg" id="toastMessage"></div>
+
 <script>
-// EMBEDDED LOGO URL
 const CASHIEPA_LOGO_DATA = "https://i.imgur.com/QeuNhgO.png";
 
-// DEFAULT / FALLBACK PRODUCTS DATA
-let allProducts = [
-  {
-    id: 1,
-    name: "iPhone 15 Pro",
-    price: 999,
-    location: "Kampala",
-    image: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=200&q=80",
-    phone: "256700000000"
-  },
-  {
-    id: 2,
-    name: "MacBook Air M2",
-    price: 1199,
-    location: "Entebbe",
-    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=200&q=80",
-    phone: "256700000000"
-  },
-  {
-    id: 3,
-    name: "PlayStation 5 Console",
-    price: 499,
-    location: "Jinja",
-    image: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=200&q=80",
-    phone: "256700000000"
-  }
+// FEATURED ITEMS (MIX OF OLD & NEW)
+const featuredItems = [
+  { id: 'f1', name: 'MacBook Pro M3 (Brand New)', price: 4800000, condition: 'New', location: 'Kampala', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=300&q=80' },
+  { id: 'f2', name: 'Refurbished iPhone 13 Pro', price: 1850000, condition: 'Old', location: 'Entebbe', image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=300&q=80' },
+  { id: 'f3', name: 'PS5 Digital Edition + Controller', price: 2100000, condition: 'New', location: 'Mbarara', image: 'https://images.unsplash.com/photo-1606813907291-d86efa9b94db?auto=format&fit=crop&w=300&q=80' }
 ];
 
-// INITIAL SETUP
+// TRENDING PRODUCTS (FOR HORIZONTAL CAROUSEL)
+const trendingProducts = [
+  { id: 't1', name: 'Wireless AirPods Pro 2', price: 450000, condition: 'New', location: 'Kampala', reward: 200, image: 'https://images.unsplash.com/photo-1600294037681-c80b4cb5b434?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
+  { id: 't2', name: 'Used Sony WH-1000XM4', price: 650000, condition: 'Old', location: 'Jinja', reward: 100, image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
+  { id: 't3', name: 'Samsung Galaxy S23 Ultra', price: 2800000, condition: 'New', location: 'Kampala', reward: 200, image: 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
+  { id: 't4', name: 'Second Hand Dell XPS 13', price: 1400000, condition: 'Old', location: 'Mukono', reward: 100, image: 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?auto=format&fit=crop&w=300&q=80', phone: '256754958464' }
+];
+
+// MAIN VERTICAL PRODUCTS LIST
+let allProducts = [
+  { id: 'p1', name: 'iPhone 15 Pro Max 256GB', price: 4200000, condition: 'New', location: 'Kampala', reward: 200, image: 'https://images.unsplash.com/photo-1695048133142-1a20484d2569?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
+  { id: 'p2', name: 'Used HP Spectre x360', price: 1950000, condition: 'Old', location: 'Entebbe', reward: 100, image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
+  { id: 'p3', name: 'Apple Watch Series 9', price: 1350000, condition: 'New', location: 'Jinja', reward: 200, image: 'https://images.unsplash.com/photo-1546868871-7041f2a55e12?auto=format&fit=crop&w=300&q=80', phone: '256754958464' },
+  { id: 'p4', name: 'Used JBL Charge 5 Speaker', price: 320000, condition: 'Old', location: 'Kampala', reward: 100, image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=300&q=80', phone: '256754958464' }
+];
+
+// SHARE STORAGE HANDLERS
+function getSharesData() {
+  return JSON.parse(localStorage.getItem('cashiepa_shares_count') || '{}');
+}
+
+function updateShareCount(id) {
+  const data = getSharesData();
+  data[id] = (data[id] || 0) + 1;
+  localStorage.setItem('cashiepa_shares_count', JSON.stringify(data));
+  return data[id];
+}
+
+// SETUP INITIAL LOAD
 window.addEventListener('DOMContentLoaded', () => {
   const heroImg = document.getElementById("main-logo-hero");
   const navImg = document.getElementById("main-logo-nav");
   if(heroImg) heroImg.src = CASHIEPA_LOGO_DATA;
   if(navImg) navImg.src = CASHIEPA_LOGO_DATA;
 
-  // Toggle Hamburger Dropdown
-  const hamburgerIcon = document.getElementById("hamburger-icon");
-  const hamburgerDropdown = document.getElementById("hamburger-dropdown");
-  if (hamburgerIcon && hamburgerDropdown) {
-    hamburgerIcon.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const currentDisplay = hamburgerDropdown.style.display;
-      hamburgerDropdown.style.display = currentDisplay === "flex" ? "none" : "flex";
-    });
+  // Toggle Drawer Navigation
+  const menuBtn = document.getElementById("menu-toggle-btn");
+  const menuDrawer = document.getElementById("menuDrawer");
 
-    document.addEventListener("click", () => {
-      hamburgerDropdown.style.display = "none";
-    });
-  }
+  menuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    menuDrawer.classList.toggle("open");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!menuDrawer.contains(e.target) && e.target !== menuBtn) {
+      menuDrawer.classList.remove("open");
+    }
+  });
 });
 
 window.addEventListener('load', () => {
   setTimeout(() => {
     document.getElementById("loading-screen").style.display = "none";
     document.getElementById("landing-page").style.display = "flex";
-  }, 1200);
+  }, 1000);
 
-  loadProductsFromJSON();
+  renderFeaturedSlides();
+  renderTrendingCarousel();
+  renderProducts(allProducts);
   startSlideshow();
 });
 
-// ENTER APP FUNCTION
+// NAVIGATION LOGIC
 function enterApp() {
   const termsCheckbox = document.getElementById("terms");
   const msg = document.getElementById("msg");
@@ -618,65 +846,140 @@ function enterApp() {
   document.getElementById("main-app").style.display = "flex";
 }
 
-// LOAD & DISPLAY PRODUCTS
-function loadProductsFromJSON() {
-  fetch('products.json')
-    .then(response => {
-      if (!response.ok) throw new Error("JSON not found");
-      return response.json();
-    })
-    .then(data => {
-      if (Array.isArray(data) && data.length > 0) {
-        allProducts = data;
-      }
-      renderProducts(allProducts);
-    })
-    .catch(() => {
-      // Fallback to initial local products
-      renderProducts(allProducts);
-    });
+function handleBackButton() {
+  const mainApp = document.getElementById("main-app");
+  if (mainApp.style.display === "flex") {
+    mainApp.style.display = "none";
+    document.getElementById("landing-page").style.display = "flex";
+  } else {
+    window.history.back();
+  }
 }
 
-function renderProducts(products) {
-  const container = document.getElementById("product-list");
+function closeDrawer() {
+  document.getElementById("menuDrawer").classList.remove("open");
+}
+
+// RENDER FEATURED SLIDESHOW
+function renderFeaturedSlides() {
+  const container = document.getElementById("featured-slideshow");
   if (!container) return;
   container.innerHTML = "";
 
-  if (products.length === 0) {
-    container.innerHTML = `<p style="color:var(--muted); text-align:center; margin-top:20px;">No products found.</p>`;
-    return;
-  }
+  featuredItems.forEach(item => {
+    const slide = document.createElement("div");
+    slide.className = "slide-card";
+    const badgeClass = item.condition === 'New' ? 'badge-new' : 'badge-old';
 
-  products.forEach(item => {
-    const card = document.createElement("div");
-    card.className = "product-item";
-    card.innerHTML = `
-      <div class="product-left">
-        <img src="${item.image}" alt="${item.name}" class="item-img" onerror="this.src='https://via.placeholder.com/55?text=Item'">
-        <div>
-          <strong style="display:block; font-size:0.95rem;">${item.name}</strong>
-          <span style="color:var(--primary); font-weight:700;">$${item.price}</span>
-          <div class="product-location"><i class="fa-solid fa-location-dot"></i> ${item.location}</div>
-        </div>
+    slide.innerHTML = `
+      <div class="slide-info">
+        <span class="badge-condition ${badgeClass}">${item.condition}</span>
+        <h4>${item.name}</h4>
+        <p>UGX ${item.price.toLocaleString()}</p>
+        <span style="font-size:0.75rem; color:var(--muted);"><i class="fa-solid fa-location-dot"></i> ${item.location}</span>
       </div>
-      <button class="action-buy-now" onclick="openBuyModal('${escapeHTML(item.name)}', '${item.price}', '${escapeHTML(item.location)}', '${item.phone}')">Buy</button>
+      <img src="${item.image}" style="width:75px; height:75px; border-radius:10px; object-fit:cover; border:1px solid var(--border)">
+    `;
+    container.appendChild(slide);
+  });
+}
+
+// RENDER TRENDING CAROUSEL (HORIZONTAL)
+function renderTrendingCarousel() {
+  const container = document.getElementById("trending-carousel");
+  if (!container) return;
+  container.innerHTML = "";
+  const shares = getSharesData();
+
+  trendingProducts.forEach(item => {
+    const count = shares[item.id] || 0;
+    const badgeClass = item.condition === 'New' ? 'badge-new' : 'badge-old';
+
+    const card = document.createElement("div");
+    card.className = "trending-card";
+    card.innerHTML = `
+      <span class="badge-condition ${badgeClass}" style="width:fit-content">${item.condition}</span>
+      <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/150'">
+      <h4>${item.name}</h4>
+      <strong style="color:var(--green); font-size:0.85rem">UGX ${item.price.toLocaleString()}</strong>
+      
+      <div class="reward-tag">
+        <i class="fa-solid fa-share-nodes"></i> Share & Earn UGX ${item.reward}
+      </div>
+
+      <div style="display:flex; gap:5px; margin-top:auto;">
+        <button class="action-buy-now" style="flex:1" onclick="openBuyModal('${escapeHTML(item.name)}', ${item.price}, '${escapeHTML(item.location)}', '${item.phone}', '${item.condition}')">Buy</button>
+        <button class="action-share-btn" onclick="shareToEarn('${item.id}', '${escapeHTML(item.name)}', ${item.price}, ${item.reward})">
+          <i class="fa-brands fa-whatsapp"></i> ${count}
+        </button>
+      </div>
     `;
     container.appendChild(card);
   });
 }
 
-function escapeHTML(str) {
-  return String(str).replace(/'/g, "\\'").replace(/"/g, "&quot;");
+// RENDER VERTICAL PRODUCT LIST
+function renderProducts(products) {
+  const container = document.getElementById("product-list");
+  if (!container) return;
+  container.innerHTML = "";
+  const shares = getSharesData();
+
+  if (products.length === 0) {
+    container.innerHTML = `<p style="color:var(--muted); text-align:center; padding:20px;">No products found.</p>`;
+    return;
+  }
+
+  products.forEach(item => {
+    const count = shares[item.id] || 0;
+    const badgeClass = item.condition === 'New' ? 'badge-new' : 'badge-old';
+
+    const card = document.createElement("div");
+    card.className = "product-item";
+    card.innerHTML = `
+      <div class="product-left">
+        <img src="${item.image}" alt="${item.name}" class="item-img" onerror="this.src='https://via.placeholder.com/65'">
+        <div class="product-details">
+          <span class="badge-condition ${badgeClass}" style="width:fit-content">${item.condition}</span>
+          <strong style="font-size:0.9rem; margin-top:2px;">${item.name}</strong>
+          <span style="color:var(--green); font-weight:700; font-size:0.85rem">UGX ${item.price.toLocaleString()}</span>
+          <div class="product-location"><i class="fa-solid fa-location-dot"></i> ${item.location}</div>
+        </div>
+      </div>
+
+      <div class="btn-actions-group">
+        <button class="action-buy-now" onclick="openBuyModal('${escapeHTML(item.name)}', ${item.price}, '${escapeHTML(item.location)}', '${item.phone}', '${item.condition}')">Buy</button>
+        <button class="action-share-btn" onclick="shareToEarn('${item.id}', '${escapeHTML(item.name)}', ${item.price}, ${item.reward || 100})">
+          <i class="fa-solid fa-share"></i> Earn UGX ${item.reward || 100}
+        </button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
 }
 
-// FILTER PRODUCTS
+// SHARE TO EARN SYSTEM
+function shareToEarn(id, name, price, reward) {
+  const newCount = updateShareCount(id);
+  const text = encodeURIComponent(`Check out *${name}* for UGX ${price.toLocaleString()} on Cashiepa!\nOrder directly or share to earn rewards: ${window.location.href}`);
+  
+  window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+  
+  showToast(`🎉 Shared successfully! (${newCount} times). UGX ${reward} share reward tracked.`);
+  
+  // Refresh views to update counts
+  renderTrendingCarousel();
+  renderProducts(allProducts);
+}
+
+// FILTER SYSTEM
 function filterProducts() {
   const query = (document.getElementById("productSearch")?.value || "").toLowerCase();
   const maxPrice = parseFloat(document.getElementById("maxPriceInput")?.value);
   const locationQuery = (document.getElementById("locationInput")?.value || "").toLowerCase();
 
   const filtered = allProducts.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(query);
+    const matchesSearch = item.name.toLowerCase().includes(query) || item.location.toLowerCase().includes(query);
     const matchesPrice = isNaN(maxPrice) || item.price <= maxPrice;
     const matchesLoc = item.location.toLowerCase().includes(locationQuery);
     return matchesSearch && matchesPrice && matchesLoc;
@@ -690,7 +993,7 @@ function startSlideshow() {
   const slideshow = document.getElementById("featured-slideshow");
   if (!slideshow) return;
   let index = 0;
-  const totalSlides = slideshow.children.length;
+  const totalSlides = featuredItems.length;
 
   setInterval(() => {
     index = (index + 1) % totalSlides;
@@ -699,17 +1002,20 @@ function startSlideshow() {
 }
 
 // BUY MODAL HANDLERS
-function openBuyModal(name, price, location, phone) {
+function openBuyModal(name, price, location, phone, condition) {
   document.getElementById("modalItemTitle").textContent = name;
-  document.getElementById("modalItemPrice").textContent = `$${price}`;
+  document.getElementById("modalItemPrice").textContent = `UGX ${price.toLocaleString()}`;
   document.getElementById("modalItemLoc").textContent = `Location: ${location}`;
 
+  const badge = document.getElementById("modalConditionBadge");
+  badge.textContent = condition;
+  badge.className = `badge-condition ${condition === 'New' ? 'badge-new' : 'badge-old'}`;
+
   const cleanPhone = (phone || "").replace(/[^0-9]/g, "");
-  const waMsg = encodeURIComponent(`Hello! I am interested in buying *${name}* listed for $${price} on Cashiepa.`);
+  const waMsg = encodeURIComponent(`Hello! I am interested in buying *${name}* listed for UGX ${price.toLocaleString()} on Cashiepa.`);
   const waBtn = document.getElementById("whatsappBtn");
 
   waBtn.href = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waMsg}` : `https://wa.me/?text=${waMsg}`;
-
   document.getElementById("buyModal").style.display = "flex";
 }
 
@@ -717,21 +1023,24 @@ function closeBuyModal() {
   document.getElementById("buyModal").style.display = "none";
 }
 
-// SUBMIT NEW LISTING TO WHATSAPP
+// WHATSAPP SUBMISSION
 function sendListingToWhatsApp(event) {
   event.preventDefault();
 
   const name = document.getElementById("itemName").value;
-  const price = document.getElementById("itemPrice").value;
+  const condition = document.getElementById("itemCondition").value;
+  const price = parseFloat(document.getElementById("itemPrice").value);
   const location = document.getElementById("itemLocation").value;
   const image = document.getElementById("itemImage").value;
   const phone = document.getElementById("sellerPhone").value;
 
   const newItem = {
-    id: Date.now(),
+    id: 'user_' + Date.now(),
     name,
-    price: parseFloat(price),
+    condition,
+    price,
     location,
+    reward: condition === 'New' ? 200 : 100,
     image,
     phone
   };
@@ -741,15 +1050,27 @@ function sendListingToWhatsApp(event) {
 
   const subMsg = document.getElementById("submissionMsg");
   subMsg.style.display = "block";
-  subMsg.textContent = "Listing submitted successfully! Redirecting to WhatsApp for verification...";
+  subMsg.textContent = "Listing created! Opening WhatsApp to verify...";
 
-  const waText = encodeURIComponent(`New Cashiepa Listing Submission:\n\n*Product:* ${name}\n*Price:* $${price}\n*Location:* ${location}\n*Image URL:* ${image}\n*Seller Contact:* ${phone}`);
+  const waText = encodeURIComponent(`New Cashiepa Listing:\n*Item:* ${name} (${condition})\n*Price:* UGX ${price.toLocaleString()}\n*Location:* ${location}\n*Image:* ${image}\n*Contact:* ${phone}`);
   
   setTimeout(() => {
-    window.open(`https://wa.me/?text=${waText}`, '_blank');
+    window.open(`https://wa.me/${phone}?text=${waText}`, '_blank');
     document.getElementById("sellItemForm").reset();
     subMsg.style.display = "none";
-  }, 1500);
+  }, 1200);
+}
+
+// UTILITY TOAST
+function showToast(msg) {
+  const toast = document.getElementById("toastMessage");
+  toast.innerHTML = msg;
+  toast.style.display = "block";
+  setTimeout(() => { toast.style.display = "none"; }, 4000);
+}
+
+function escapeHTML(str) {
+  return String(str).replace(/'/g, "\\'").replace(/"/g, "&quot;");
 }
 </script>
 </body>
